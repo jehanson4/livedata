@@ -38,28 +38,28 @@ public class LDSamples {
 
 	public static Map<String, LDElement> defaultItems() {
 		Map<String, LDElement> items = new LinkedHashMap<String, LDElement>();
-		items.put(LDElement.EType.BOOLEAN.getName(), new LDBoolean());
-		items.put(LDElement.EType.DOUBLE.getName(), new LDDouble());
-		items.put(LDElement.EType.LONG.getName(), new LDLong());
-		items.put(LDElement.EType.LIST.getName(), new LDList());
-		items.put(LDElement.EType.MAP.getName(), new LDMap());
-		items.put(LDElement.EType.REFERENCE.getName(), new LDReference());
-		items.put(LDElement.EType.STRING.getName(), new LDString());
-		items.put(LDElement.EType.VOID.getName(), new LDVoid());
+		items.put(LDElement.VType.BOOLEAN.getName(), new LDBoolean());
+		items.put(LDElement.VType.DOUBLE.getName(), new LDDouble());
+		items.put(LDElement.VType.LONG.getName(), new LDLong());
+		items.put(LDElement.VType.LIST.getName(), new LDList());
+		items.put(LDElement.VType.MAP.getName(), new LDMap());
+		items.put(LDElement.VType.REFERENCE.getName(), new LDReference());
+		items.put(LDElement.VType.STRING.getName(), new LDString());
+		items.put(LDElement.VType.VOID.getName(), new LDVoid());
 		return items;
 	}
 
 	public static Map<String, LDElement> simpleItems() {
 		Map<String, LDElement> items = new LinkedHashMap<String, LDElement>();
-		items.put(LDElement.EType.BOOLEAN.getName(), new LDBoolean(true));
-		items.put(LDElement.EType.DOUBLE.getName(), new LDDouble(-99.99));
-		items.put(LDElement.EType.LONG.getName(), new LDLong(1001));
-		items.put(LDElement.EType.LIST.getName(), new LDList());
-		items.put(LDElement.EType.MAP.getName(), new LDMap());
-		items.put(LDElement.EType.REFERENCE.getName(),
+		items.put(LDElement.VType.BOOLEAN.getName(), new LDBoolean(true));
+		items.put(LDElement.VType.DOUBLE.getName(), new LDDouble(-99.99));
+		items.put(LDElement.VType.LONG.getName(), new LDLong(1001));
+		items.put(LDElement.VType.LIST.getName(), new LDList());
+		items.put(LDElement.VType.MAP.getName(), new LDMap());
+		items.put(LDElement.VType.REFERENCE.getName(),
 				new LDReference(URI.create("http://www.example.com")));
-		items.put(LDElement.EType.STRING.getName(), new LDString("fee fie foe fum"));
-		items.put(LDElement.EType.VOID.getName(), new LDVoid());
+		items.put(LDElement.VType.STRING.getName(), new LDString("fee fie foe fum"));
+		items.put(LDElement.VType.VOID.getName(), new LDVoid());
 		return items;
 	}
 
