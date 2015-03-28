@@ -33,8 +33,8 @@ public class LDVoid extends LDElement {
 	}
 
 	@Override
-	public LDElement.EType getEType() {
-		return LDElement.EType.VOID;
+	public LDElement.VType getEType() {
+		return LDElement.VType.VOID;
 	}
 
 	@Override

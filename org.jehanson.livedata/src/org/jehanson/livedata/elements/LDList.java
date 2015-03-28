@@ -120,8 +120,8 @@ public class LDList extends LDElement implements LDContainer {
 //	}
 
 	@Override
-	public LDElement.EType getEType() {
-		return LDElement.EType.LIST;
+	public LDElement.VType getEType() {
+		return LDElement.VType.LIST;
 	}
 
 	@Override
@@ -187,7 +187,7 @@ public class LDList extends LDElement implements LDContainer {
 			elem.unsetParent();
 			throw e;
 		}
-		notifyDataChange();
+		notifyStructureChange();
 	}
 
 	public void addChild(int idx, LDElement elem) {
@@ -201,7 +201,7 @@ public class LDList extends LDElement implements LDContainer {
 			elem.unsetParent();
 			throw e;
 		}
-		notifyDataChange();
+		notifyStructureChange();
 	}
 
 	public LDElement setChild(int idx, LDElement elem) {
@@ -217,14 +217,14 @@ public class LDList extends LDElement implements LDContainer {
 			elem.unsetParent();
 			throw e;
 		}
-		notifyDataChange();
+		notifyStructureChange();
 		return prevChild;
 	}
 
 	public LDElement removeChild(int idx) {
 		LDElement prevChild = children.remove(idx);
 		prevChild.unsetParent();
-		notifyDataChange();
+		notifyStructureChange();
 		return prevChild;
 	}
 
@@ -233,7 +233,7 @@ public class LDList extends LDElement implements LDContainer {
 			for (LDElement c : children)
 				c.unsetParent();
 			children.clear();
-			notifyDataChange();
+			notifyStructureChange();
 		}
 	}
 
@@ -287,8 +287,13 @@ public class LDList extends LDElement implements LDContainer {
 	}
 
 	@Override
-	public void childDataChanged() {
-		notifyDataChange();
+	public void childValueChanged() {
+		notifyValueChange();
+	}
+
+	@Override
+	public void childStructureChanged() {
+		notifyStructureChange();
 	}
 
 }

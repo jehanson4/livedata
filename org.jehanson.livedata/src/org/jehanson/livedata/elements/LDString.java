@@ -45,8 +45,8 @@ public class LDString extends LDElement {
 	// ============================
 
 	@Override
-	public LDElement.EType getEType() {
-		return LDElement.EType.STRING;
+	public LDElement.VType getEType() {
+		return LDElement.VType.STRING;
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class LDString extends LDElement {
 			throw new IllegalArgumentException("value cannot be null");
 		if (!value.equals(this.value)) {
 			this.value = value;
-			notifyDataChange();
+			notifyValueChange();
 		}
 	}
 

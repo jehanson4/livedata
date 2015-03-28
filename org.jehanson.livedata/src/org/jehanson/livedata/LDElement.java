@@ -58,7 +58,7 @@ public abstract class LDElement {
 	// Variables
 	// ===========================================
 
-	public static enum EType {
+	public static enum VType {
 		BOOLEAN {
 			@Override
 			public String getName() {
@@ -272,7 +272,7 @@ public abstract class LDElement {
 	// Operation
 	// ===========================================
 
-	public abstract LDElement.EType getEType();
+	public abstract LDElement.VType getEType();
 
 	public abstract void print(PrintWriter writer, int level, boolean insertLineBreaks);
 
@@ -316,9 +316,14 @@ public abstract class LDElement {
 		return new TreeIterator(this);
 	}
 
-	protected void notifyDataChange() {
+	protected void notifyValueChange() {
 		if (parent != null)
-			parent.childDataChanged();
+			parent.childValueChanged();
+	}
+
+	protected void notifyStructureChange() {
+		if (parent != null)
+			parent.childStructureChanged();
 	}
 
 	/**

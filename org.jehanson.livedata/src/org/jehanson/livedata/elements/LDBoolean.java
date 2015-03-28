@@ -53,8 +53,8 @@ public class LDBoolean extends LDElement {
 	}
 
 	@Override
-	public LDElement.EType getEType() {
-		return LDElement.EType.BOOLEAN;
+	public LDElement.VType getEType() {
+		return LDElement.VType.BOOLEAN;
 	}
 
 	public boolean getValue() {
@@ -64,7 +64,7 @@ public class LDBoolean extends LDElement {
 	public void setValue(boolean value) {
 		if (value != this.value) {
 			this.value = value;
-			notifyDataChange();
+			notifyValueChange();
 		}
 	}
 

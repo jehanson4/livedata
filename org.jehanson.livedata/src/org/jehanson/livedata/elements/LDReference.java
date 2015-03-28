@@ -52,8 +52,8 @@ public class LDReference extends LDElement {
 	// =======================================
 
 	@Override
-	public LDElement.EType getEType() {
-		return LDElement.EType.REFERENCE;
+	public LDElement.VType getEType() {
+		return LDElement.VType.REFERENCE;
 	}
 
 	public URI getValue() {
@@ -65,7 +65,7 @@ public class LDReference extends LDElement {
 			throw new IllegalArgumentException("value cannot be null");
 		if (!this.value.equals(value)) {
 			this.value = value;
-			notifyDataChange();
+			notifyValueChange();
 		}
 	}
 

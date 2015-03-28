@@ -38,7 +38,7 @@ public class LDSerializerJSON implements LDSerializer {
 
 	private final boolean insertLineBreaks;
 	private final String indentStr;
-	private Map<LDElement.EType, ContentPrinter> contentPrinters;
+	private Map<LDElement.VType, ContentPrinter> contentPrinters;
 
 	// ================================
 	// Creation
@@ -144,7 +144,7 @@ public class LDSerializerJSON implements LDSerializer {
 	private final void loadContentPrinters() {
 		// THREADSAFETY
 		if (contentPrinters == null) {
-			contentPrinters = new HashMap<LDElement.EType, ContentPrinter>();
+			contentPrinters = new HashMap<LDElement.VType, ContentPrinter>();
 
 			ContentPrinter booleanCP = new ContentPrinter() {
 				@Override
@@ -254,14 +254,14 @@ public class LDSerializerJSON implements LDSerializer {
 				}
 			};
 
-			contentPrinters.put(LDElement.EType.BOOLEAN, booleanCP);
-			contentPrinters.put(LDElement.EType.DOUBLE, doubleCP);
-			contentPrinters.put(LDElement.EType.LIST, listCP);
-			contentPrinters.put(LDElement.EType.LONG, longCP);
-			contentPrinters.put(LDElement.EType.MAP, mapCP);
-			contentPrinters.put(LDElement.EType.REFERENCE, referenceCP);
-			contentPrinters.put(LDElement.EType.STRING, stringCP);
-			contentPrinters.put(LDElement.EType.VOID, voidCP);
+			contentPrinters.put(LDElement.VType.BOOLEAN, booleanCP);
+			contentPrinters.put(LDElement.VType.DOUBLE, doubleCP);
+			contentPrinters.put(LDElement.VType.LIST, listCP);
+			contentPrinters.put(LDElement.VType.LONG, longCP);
+			contentPrinters.put(LDElement.VType.MAP, mapCP);
+			contentPrinters.put(LDElement.VType.REFERENCE, referenceCP);
+			contentPrinters.put(LDElement.VType.STRING, stringCP);
+			contentPrinters.put(LDElement.VType.VOID, voidCP);
 		}
 	}
 

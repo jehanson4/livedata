@@ -52,8 +52,8 @@ public class LDLong extends LDElement {
 	}
 
 	@Override
-	public LDElement.EType getEType() {
-		return LDElement.EType.LONG;
+	public LDElement.VType getEType() {
+		return LDElement.VType.LONG;
 	}
 
 	public long getValue() {
@@ -63,7 +63,7 @@ public class LDLong extends LDElement {
 	public void setValue(long value) {
 		if (value != this.value) {
 			this.value = value;
-			notifyDataChange();
+			notifyValueChange();
 		}
 	}
 

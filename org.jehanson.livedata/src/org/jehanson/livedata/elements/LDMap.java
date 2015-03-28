@@ -1,11 +1,13 @@
 package org.jehanson.livedata.elements;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -66,6 +68,8 @@ public class LDMap extends LDElement implements LDContainer {
 	// Variables
 	// ==============================
 
+	public static KeyOrder defaultKeyOrder = KeyOrder.ANY;
+
 	private final KeyOrder keyOrder;
 	private final Map<String, LDElement> children;
 
@@ -76,7 +80,7 @@ public class LDMap extends LDElement implements LDContainer {
 	// ==============================
 
 	public LDMap() {
-		this(KeyOrder.ANY);
+		this(defaultKeyOrder);
 	}
 
 	public LDMap(KeyOrder keyOrder) {
@@ -98,6 +102,16 @@ public class LDMap extends LDElement implements LDContainer {
 	// ==============================
 	// Operation
 	// ==============================
+
+	public static KeyOrder getDefaultKeyOrder() {
+		return defaultKeyOrder;
+	}
+
+	public static void setDefaultKeyOrder(KeyOrder k) {
+		if (k == null)
+			throw new IllegalArgumentException("k cannot be null");
+		defaultKeyOrder = k;
+	}
 
 	/**
 	 * Indicates whether the given string is a valid key in an LNMap.
@@ -182,8 +196,8 @@ public class LDMap extends LDElement implements LDContainer {
 // }
 
 	@Override
-	public LDElement.EType getEType() {
-		return LDElement.EType.MAP;
+	public LDElement.VType getEType() {
+		return LDElement.VType.MAP;
 	}
 
 	@Override
@@ -247,7 +261,6 @@ public class LDMap extends LDElement implements LDContainer {
 		return null;
 	}
 
-
 	public LDElement putChild(String key, LDElement elem) {
 		if (!isKey(key))
 			throw new IllegalArgumentException("Bad key: " + key);
@@ -257,7 +270,7 @@ public class LDMap extends LDElement implements LDContainer {
 		LDElement prevChild = children.put(key, elem);
 		if (prevChild != null)
 			prevChild.unsetParent();
-		notifyDataChange();
+		notifyStructureChange();
 		return prevChild;
 	}
 
@@ -265,9 +278,23 @@ public class LDMap extends LDElement implements LDContainer {
 		LDElement prevChild = children.remove(key);
 		if (prevChild != null) {
 			prevChild.unsetParent();
-			notifyDataChange();
+			notifyStructureChange();
 		}
 		return prevChild;
+	}
+
+	public void removeAllChildren() {
+		if (children.isEmpty())
+			return;
+
+		List<String> keys = new ArrayList<String>();
+		keys.addAll(children.keySet());
+		for (String key : keys) {
+			LDElement prevChild = children.remove(key);
+			if (prevChild != null)
+				prevChild.unsetParent();
+		}
+		notifyStructureChange();
 	}
 
 	@Override
@@ -327,8 +354,13 @@ public class LDMap extends LDElement implements LDContainer {
 	}
 
 	@Override
-	public void childDataChanged() {
-		notifyDataChange();
+	public void childValueChanged() {
+		notifyValueChange();
+	}
+
+	@Override
+	public void childStructureChanged() {
+		notifyStructureChange();
 	}
 
 	// ===================================
