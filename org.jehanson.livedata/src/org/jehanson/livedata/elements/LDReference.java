@@ -13,12 +13,14 @@ import org.jehanson.livedata.LDHelpers;
  */
 public class LDReference extends LDElement {
 
-	// MAYBE just use a URI and be done with all this foolishness
-	
-	// MAYBE permit caching of dereferenced LDObjects . . . tho that sould
-	// mean much tighter integration with
-	// LNResource, and maybe even defining LNResource (sans model set) in this
-	// bundle.
+	/*
+	 * This does not contain the dereferenced target object. I've gone back and
+	 * forth on whether it should. The upside is much faster operation. The
+	 * downside is that I would have to define, in this lib, the class type for a
+	 * dereferenced-obj: i.e., introduce MMObject or something. That would open
+	 * the door to bringing in resolvers, caches, and all that kind of stuff,
+	 * which I feel doesn't really belong here.
+	 */
 
 	// =======================================
 	// Variables
@@ -26,7 +28,7 @@ public class LDReference extends LDElement {
 
 	public static final String DEFAULT_VALUE_STR = "";
 	private URI value;
-	
+
 	// =======================================
 	// Creation
 	// =======================================
@@ -40,7 +42,7 @@ public class LDReference extends LDElement {
 			throw new IllegalArgumentException("value cannot be null");
 		this.value = value;
 	}
-	
+
 	public LDReference(LDReference element) {
 		if (element == null)
 			throw new IllegalArgumentException("Argument \"item\" cannot be null");
@@ -59,13 +61,13 @@ public class LDReference extends LDElement {
 	public URI getValue() {
 		return value;
 	}
-	
+
 	public void setValue(URI value) {
 		if (value == null)
 			throw new IllegalArgumentException("value cannot be null");
 		if (!this.value.equals(value)) {
 			this.value = value;
-			notifyValueChange();
+			notifyReferenceChange();
 		}
 	}
 
@@ -78,10 +80,10 @@ public class LDReference extends LDElement {
 	public void copyFrom(LDElement dobj) throws LDException {
 		LDReference b = LDHelpers.asReference(dobj);
 		if (b == null)
-			throw new LDException("cannot convert to " + this.getEType().getName() + ": " + dobj);
+			throw new LDException("cannot convert to " + this.getEType().getName() + ": "
+					+ dobj);
 		this.setValue(b.getValue());
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -96,8 +98,8 @@ public class LDReference extends LDElement {
 			return true;
 		else if (!(obj instanceof LDReference))
 			return false;
-		else 
-			return this.value.equals(((LDReference)obj).getValue());
+		else
+			return this.value.equals(((LDReference) obj).getValue());
 	}
 
 	@Override

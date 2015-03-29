@@ -93,12 +93,20 @@ public interface LDContainer {
 	public Iterator<LDCursor> childIterator(LDPath basePath);
 
 	/**
-	 * Informs this container that the value of one of its children has changed.
+	 * Informs this container that a value in one of its children has changed.
 	 * <p>
 	 * This method is called by a container's children when they are modified.
 	 * Users should not bother to call it.
 	 */
 	public void childValueChanged();
+
+	/**
+	 * Informs this container that a reference in one of its children has changed.
+	 * <p>
+	 * This method is called by a container's children when they are modified.
+	 * Users should not bother to call it.
+	 */
+	public void childReferenceChanged();
 
 	/**
 	 * Informs this container that the structure of one of its children has changed.

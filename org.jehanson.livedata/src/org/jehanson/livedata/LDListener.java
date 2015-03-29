@@ -6,5 +6,7 @@ package org.jehanson.livedata;
  */
 public interface LDListener {
 
-	public void dirtyStateChanged(LDRoot root, boolean valueDirty, boolean structureDirty);
+	public void valueChanged(LiveData data);
+	public void structureChanged(LiveData data);
+	public void referenceChanged(LiveData data);
 }

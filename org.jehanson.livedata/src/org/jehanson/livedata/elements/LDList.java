@@ -287,13 +287,18 @@ public class LDList extends LDElement implements LDContainer {
 	}
 
 	@Override
-	public void childValueChanged() {
-		notifyValueChange();
+	public void childReferenceChanged() {
+		notifyReferenceChange();
 	}
 
 	@Override
 	public void childStructureChanged() {
 		notifyStructureChange();
+	}
+
+	@Override
+	public void childValueChanged() {
+		notifyValueChange();
 	}
 
 }
