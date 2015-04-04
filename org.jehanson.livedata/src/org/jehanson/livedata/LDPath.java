@@ -134,8 +134,6 @@ public class LDPath {
 // * @return true if the given path is a prefix of this path.
 // */
 // public boolean isPrefixOf(LDPath path2) {
-// // FIXME not implemented
-// throw new UnsupportedOperationException("not implemented");
 // }
 
 	@Override
@@ -165,7 +163,7 @@ public class LDPath {
 		if (obj == this)
 			return true;
 		else if (!(obj instanceof LDPath))
-			// TODO construct a path from obj and then compare.
+			// MAYBE construct a path from obj and then compare.
 			return false;
 		else {
 			LDPath p1 = (LDPath) obj;
