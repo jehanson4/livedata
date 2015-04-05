@@ -45,8 +45,8 @@ public class LDString extends LDElement {
 	// ============================
 
 	@Override
-	public LDElement.VType getEType() {
-		return LDElement.VType.STRING;
+	public LDElement.EType getEType() {
+		return LDElement.EType.STRING;
 	}
 
 	@Override

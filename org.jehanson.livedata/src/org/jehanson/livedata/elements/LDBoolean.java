@@ -53,8 +53,8 @@ public class LDBoolean extends LDElement {
 	}
 
 	@Override
-	public LDElement.VType getEType() {
-		return LDElement.VType.BOOLEAN;
+	public LDElement.EType getEType() {
+		return LDElement.EType.BOOLEAN;
 	}
 
 	public boolean getValue() {

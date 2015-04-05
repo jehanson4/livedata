@@ -54,8 +54,8 @@ public class LDDouble extends LDElement {
 	}
 
 	@Override
-	public LDElement.VType getEType() {
-		return LDElement.VType.DOUBLE;
+	public LDElement.EType getEType() {
+		return LDElement.EType.DOUBLE;
 	}
 
 	public double getValue() {

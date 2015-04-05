@@ -20,7 +20,7 @@ import org.jehanson.livedata.elements.LDVoid;
  */
 public class LDHelpers {
 
-	public static LDElement createElement(LDElement.VType type) {
+	public static LDElement createElement(LDElement.EType type) {
 		// MAYBE put this functionality inside IType without introducing
 		// circular import.
 		switch (type) {
@@ -46,7 +46,7 @@ public class LDHelpers {
 	}
 
 	public static LDBoolean asBoolean(LDElement item) {
-		return (item != null && item.getEType() == LDElement.VType.BOOLEAN) ? (LDBoolean) item
+		return (item != null && item.getEType() == LDElement.EType.BOOLEAN) ? (LDBoolean) item
 				: null;
 	}
 
@@ -56,37 +56,37 @@ public class LDHelpers {
 	}
 
 	public static LDDouble asDouble(LDElement item) {
-		return (item != null && item.getEType() == LDElement.VType.DOUBLE) ? (LDDouble) item
+		return (item != null && item.getEType() == LDElement.EType.DOUBLE) ? (LDDouble) item
 				: null;
 	}
 
 	public static LDList asList(LDElement item) {
-		return (item != null && item.getEType() == LDElement.VType.LIST) ? (LDList) item
+		return (item != null && item.getEType() == LDElement.EType.LIST) ? (LDList) item
 				: null;
 	}
 
 	public static LDLong asLong(LDElement item) {
-		return (item != null && item.getEType() == LDElement.VType.LONG) ? (LDLong) item
+		return (item != null && item.getEType() == LDElement.EType.LONG) ? (LDLong) item
 				: null;
 	}
 
 	public static LDMap asMap(LDElement item) {
-		return (item != null && item.getEType() == LDElement.VType.MAP) ? (LDMap) item
+		return (item != null && item.getEType() == LDElement.EType.MAP) ? (LDMap) item
 				: null;
 	}
 
 	public static LDReference asReference(LDElement item) {
-		return (item != null && item.getEType() == LDElement.VType.REFERENCE) ? (LDReference) item
+		return (item != null && item.getEType() == LDElement.EType.REFERENCE) ? (LDReference) item
 				: null;
 	}
 
 	public static LDString asString(LDElement item) {
-		return (item != null && item.getEType() == LDElement.VType.STRING) ? (LDString) item
+		return (item != null && item.getEType() == LDElement.EType.STRING) ? (LDString) item
 				: null;
 	}
 
 	public static LDVoid asVoid(LDElement item) {
-		return (item != null && item.getEType() == LDElement.VType.VOID) ? (LDVoid) item
+		return (item != null && item.getEType() == LDElement.EType.VOID) ? (LDVoid) item
 				: null;
 	}
 

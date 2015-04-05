@@ -54,8 +54,8 @@ public class LDReference extends LDElement {
 	// =======================================
 
 	@Override
-	public LDElement.VType getEType() {
-		return LDElement.VType.REFERENCE;
+	public LDElement.EType getEType() {
+		return LDElement.EType.REFERENCE;
 	}
 
 	public URI getValue() {

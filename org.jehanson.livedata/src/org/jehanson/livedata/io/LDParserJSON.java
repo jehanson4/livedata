@@ -2,6 +2,8 @@ package org.jehanson.livedata.io;
 
 import java.io.FilterReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jehanson.livedata.LDElement;
+import org.jehanson.livedata.LiveData;
 import org.jehanson.livedata.elements.LDBoolean;
 import org.jehanson.livedata.elements.LDDouble;
 import org.jehanson.livedata.elements.LDList;
@@ -156,19 +159,10 @@ public class LDParserJSON implements LDParser {
 			}
 		}
 
-		public LDElement readDataObject() throws IOException, LDFormatException {
-			char c = skipWhitespace();
-			unread(c);
-			switch (c) {
-			case LDParserJSON.LIST_PREFIX:
-				return readList();
-			case LDParserJSON.MAP_PREFIX:
-				return readMap();
-			case LDParserJSON.QUOTE:
-				return readStringBasedObj();
-			default:
-				return readSimpleObj();
-			}
+		public LDMap readMap() throws IOException, LDFormatException {
+			LDMap map = new LDMap();
+			readMapContents(map);
+			return map;
 		}
 
 		public LDList readList() throws LDFormatException, IOException {
@@ -196,20 +190,33 @@ public class LDParserJSON implements LDParser {
 			return list;
 		}
 
-		public LDMap readMap() throws IOException, LDFormatException {
+		protected LDElement readDataObject() throws IOException, LDFormatException {
+			char c = skipWhitespace();
+			unread(c);
+			switch (c) {
+			case LDParserJSON.LIST_PREFIX:
+				return readList();
+			case LDParserJSON.MAP_PREFIX:
+				return readMap();
+			case LDParserJSON.QUOTE:
+				return readStringBasedObj();
+			default:
+				return readSimpleObj();
+			}
+		}
+
+		public void readMapContents(LDMap map) throws IOException, LDFormatException {
 			char c = skipWhitespace();
 			if (c != LDParserJSON.MAP_PREFIX)
 				throw new LDFormatException(errorMessage("Expected \'"
 						+ LDParserJSON.MAP_PREFIX + "\', got \'" + (char) c + "\'"));
-			LDMap map = new LDMap();
 			c = skipWhitespace(); // this checks for empty maps
 			if (c != LDParserJSON.MAP_SUFFIX) {
 				unread(c);
 				for (;;) {
 					String key = readJsonString();
 					if (!LDMap.isKey(key))
-						throw new LDFormatException(
-								errorMessage("Invalid key: " + key));
+						throw new LDFormatException(errorMessage("Invalid key: " + key));
 					c = skipWhitespace();
 					if (c != LDParserJSON.KEY_VALUE_SEP_CHAR)
 						throw new LDFormatException(errorMessage("Expected \'"
@@ -227,7 +234,6 @@ public class LDParserJSON implements LDParser {
 								+ "\'");
 				}
 			}
-			return map;
 		}
 
 		public LDElement readStringBasedObj() throws LDFormatException, IOException {
@@ -235,7 +241,7 @@ public class LDParserJSON implements LDParser {
 			URI refValue = null;
 			if (s.length() >= 2 && s.charAt(0) == REFERENCE_PREFIX
 					&& s.charAt(s.length() - 1) == REFERENCE_SUFFIX) {
-				String s2 = s.substring(1, s.length()-1);
+				String s2 = s.substring(1, s.length() - 1);
 				try {
 					refValue = new URI(s2);
 				}
@@ -418,14 +424,10 @@ public class LDParserJSON implements LDParser {
 	static final char SPACE = ' ';
 	static final char ESC = '\\';
 	static final String CONTROL_CHARS = "\b\f\n\r\t";
-	static final String[] CONTROL_ESCAPES = { // must match order of CONTROL_CHARS 
-		"\\b",
-		"\\f",
-		"\\n",
-		"\\r",
-		"\\t"
-	};
-	
+
+	// must match order of CONTROL_CHARS
+	static final String[] CONTROL_ESCAPES = { "\\b", "\\f", "\\n", "\\r", "\\t" };
+
 	// =================================
 	// Creation
 	// =================================
@@ -439,21 +441,37 @@ public class LDParserJSON implements LDParser {
 	// =================================
 
 	@Override
-	public LDElement parse(Reader r) throws IOException, LDFormatException {
-		final String mtdName = "parse";
-		if (r == null)
-			throw new IllegalArgumentException("Argument \"r\" cannot be null");
+	public void parse(LiveData obj, InputStream inputStream) throws IOException,
+			LDFormatException {
+		if (inputStream == null)
+			throw new IllegalArgumentException("inputStream cannot be null");
+		Reader r = new InputStreamReader(inputStream);
 		Tokenizer r2 = new Tokenizer(r);
 		try {
-			LDElement dobj = r2.readDataObject();
-			if (logger.isLoggable(Level.FINER))
-				logger.logp(Level.FINER, clsName, mtdName, "parsed data object: " + dobj);
-			return dobj;
+			r2.readMapContents(obj);
 		}
 		finally {
 			// Does closing r2 close r as well? Yes it does.
+			// Does closing r close inputStream? I don't know!
 			r2.close();
 		}
 	}
 
+	@Override
+	public LDElement parse(InputStream inputStream) throws IOException, LDFormatException {
+		if (inputStream == null)
+			throw new IllegalArgumentException("stream cannot be null");
+		Reader r = new InputStreamReader(inputStream);
+		Tokenizer r2 = new Tokenizer(r);
+		try {
+			return r2.readDataObject();
+		}
+		finally {
+			// Does closing r2 close r as well? Yes it does.
+			// Does closing r close inputStream? I don't know!
+			r2.close();
+		}
+	}
+	
+	
 }

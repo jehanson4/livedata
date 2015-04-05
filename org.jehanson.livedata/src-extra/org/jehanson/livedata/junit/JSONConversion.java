@@ -1,13 +1,13 @@
 package org.jehanson.livedata.junit;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.InputStream;
 
 import org.jehanson.livedata.LDElement;
 import org.jehanson.livedata.LDHelpers;
 import org.jehanson.livedata.io.LDFormatException;
-import org.jehanson.livedata.io.LDParser;
 import org.jehanson.livedata.io.LDParserJSON;
 import org.jehanson.livedata.io.LDSerializer;
 import org.jehanson.livedata.io.LDSerializerJSON;
@@ -20,39 +20,40 @@ import org.junit.Test;
  */
 public class JSONConversion {
 
-//	@Test
-//	public void writeTest() throws IOException {
-//		PrintWriter w = new PrintWriter(System.out);
-//		LDItem item = LDItemAssembly.createDeepMap();
-//		LDSerializer ser = new LDSerializerJSON(true);
-//		try {
-//			ser.serialize(item, w);
-//		}
-//		finally {
-//			w.close();
-//		}
-//	}
-	
+// @Test
+// public void writeTest() throws IOException {
+// PrintWriter w = new PrintWriter(System.out);
+// LDItem item = LDItemAssembly.createDeepMap();
+// LDSerializer ser = new LDSerializerJSON(true);
+// try {
+// ser.serialize(item, w);
+// }
+// finally {
+// w.close();
+// }
+// }
+
 	@Test
 	public void roundTrip() throws IOException, LDFormatException {
-		StringWriter w = new StringWriter();
+		ByteArrayOutputStream outs = new ByteArrayOutputStream();
 		LDElement dobj1 = LDSamples.deepMap(3);
 		LDSerializer ser = new LDSerializerJSON(true);
 		try {
-			ser.serialize(dobj1, w);
+			ser.serialize(dobj1, outs);
 		}
 		finally {
-			w.close();
+			outs.close();
 		}
 
-		String s = w.toString();
+		String s = outs.toString();
 		System.out.println("==================");
 		System.out.println(s);
 		System.out.println("==================");
-		StringReader r = new StringReader(s);
-		LDParser par = new LDParserJSON();
-		LDElement dobj2 = par.parse(r);
-		
+
+		LDParserJSON par = new LDParserJSON();
+		InputStream ins = new ByteArrayInputStream(s.getBytes());
+		LDElement dobj2 = par.parse(ins);
+
 		if (dobj1.equals(dobj2))
 			System.out.println("they're equal");
 		else {
@@ -61,28 +62,28 @@ public class JSONConversion {
 			throw new AssertionError("they're not equal");
 		}
 	}
-	
+
 	@Test
 	public void multilineString() throws IOException, LDFormatException {
-		
-		
-		StringWriter w = new StringWriter();
+
+		ByteArrayOutputStream outs = new ByteArrayOutputStream();
 		LDElement dobj1 = LDSamples.multilineString(3);
 		LDSerializer ser = new LDSerializerJSON(true);
 		try {
-			ser.serialize(dobj1, w);
+			ser.serialize(dobj1, outs);
 		}
 		finally {
-			w.close();
+			outs.close();
 		}
 
-		String s = w.toString();
+		String s = outs.toString();
 		System.out.println("==================");
 		System.out.println(s);
 		System.out.println("==================");
-		StringReader r = new StringReader(s);
-		LDParser par = new LDParserJSON();
-		LDElement dobj2 = par.parse(r);
+		
+		LDParserJSON par = new LDParserJSON();
+		InputStream ins = new ByteArrayInputStream(s.getBytes());
+		LDElement dobj2 = par.parse(ins);
 		System.out.println(dobj2);
 		if (dobj1.equals(dobj2))
 			System.out.println("they're equal");

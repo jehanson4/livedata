@@ -120,8 +120,8 @@ public class LDList extends LDElement implements LDContainer {
 //	}
 
 	@Override
-	public LDElement.VType getEType() {
-		return LDElement.VType.LIST;
+	public LDElement.EType getEType() {
+		return LDElement.EType.LIST;
 	}
 
 	@Override

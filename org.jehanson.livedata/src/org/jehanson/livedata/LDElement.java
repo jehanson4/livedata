@@ -58,7 +58,7 @@ public abstract class LDElement {
 	// Variables
 	// ===========================================
 
-	public static enum VType {
+	public static enum EType {
 		BOOLEAN {
 			@Override
 			public String getName() {
@@ -272,7 +272,7 @@ public abstract class LDElement {
 	// Operation
 	// ===========================================
 
-	public abstract LDElement.VType getEType();
+	public abstract EType getEType();
 
 	public abstract void print(PrintWriter writer, int level, boolean insertLineBreaks);
 

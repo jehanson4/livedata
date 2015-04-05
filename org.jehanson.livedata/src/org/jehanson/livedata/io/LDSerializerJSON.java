@@ -1,6 +1,8 @@
 package org.jehanson.livedata.io;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.HashMap;
@@ -38,7 +40,7 @@ public class LDSerializerJSON implements LDSerializer {
 
 	private final boolean insertLineBreaks;
 	private final String indentStr;
-	private Map<LDElement.VType, ContentPrinter> contentPrinters;
+	private Map<LDElement.EType, ContentPrinter> contentPrinters;
 
 	// ================================
 	// Creation
@@ -76,17 +78,19 @@ public class LDSerializerJSON implements LDSerializer {
 	 * LDObject, java.io.Writer)
 	 */
 	@Override
-	public void serialize(LDElement item, Writer w) throws IOException {
-		if (w == null)
-			throw new IllegalArgumentException("Argument \"w\" cannot be null");
-
-		PrintWriter writer =
-				(w instanceof PrintWriter) ? (PrintWriter) w : new PrintWriter(w);
-		if (item == null)
-			writer.print(LDParserJSON.NULL);
-		else {
+	public void serialize(LDElement obj, OutputStream stream) throws IOException {
+		if (obj == null)
+			throw new IllegalArgumentException("obj cannot be null");
+		if (stream == null)
+			throw new IllegalArgumentException("stream cannot be null");
+		Writer w1 = new OutputStreamWriter(stream);
+		PrintWriter w2 = new PrintWriter(w1);
+		try {
 			loadContentPrinters();
-			contentPrinters.get(item.getEType()).print(item, writer, 0);
+			contentPrinters.get(obj.getEType()).print(obj, w2, 0);
+		}
+		finally {
+			w2.flush();
 		}
 	}
 
@@ -144,7 +148,7 @@ public class LDSerializerJSON implements LDSerializer {
 	private final void loadContentPrinters() {
 		// THREADSAFETY
 		if (contentPrinters == null) {
-			contentPrinters = new HashMap<LDElement.VType, ContentPrinter>();
+			contentPrinters = new HashMap<LDElement.EType, ContentPrinter>();
 
 			ContentPrinter booleanCP = new ContentPrinter() {
 				@Override
@@ -254,14 +258,14 @@ public class LDSerializerJSON implements LDSerializer {
 				}
 			};
 
-			contentPrinters.put(LDElement.VType.BOOLEAN, booleanCP);
-			contentPrinters.put(LDElement.VType.DOUBLE, doubleCP);
-			contentPrinters.put(LDElement.VType.LIST, listCP);
-			contentPrinters.put(LDElement.VType.LONG, longCP);
-			contentPrinters.put(LDElement.VType.MAP, mapCP);
-			contentPrinters.put(LDElement.VType.REFERENCE, referenceCP);
-			contentPrinters.put(LDElement.VType.STRING, stringCP);
-			contentPrinters.put(LDElement.VType.VOID, voidCP);
+			contentPrinters.put(LDElement.EType.BOOLEAN, booleanCP);
+			contentPrinters.put(LDElement.EType.DOUBLE, doubleCP);
+			contentPrinters.put(LDElement.EType.LIST, listCP);
+			contentPrinters.put(LDElement.EType.LONG, longCP);
+			contentPrinters.put(LDElement.EType.MAP, mapCP);
+			contentPrinters.put(LDElement.EType.REFERENCE, referenceCP);
+			contentPrinters.put(LDElement.EType.STRING, stringCP);
+			contentPrinters.put(LDElement.EType.VOID, voidCP);
 		}
 	}
 

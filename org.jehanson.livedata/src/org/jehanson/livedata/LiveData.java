@@ -54,4 +54,16 @@ public class LiveData extends LDMap {
 			listener.valueChanged(this);
 	}
 
+// /** Syntactic sugar */
+// public void load(LDParser parser, InputStream stream) throws
+// LDFormatException, IOException {
+// parser.parse(this, stream);
+// }
+//
+// /** Syntactic sugar */
+// public void store(LDSerializer serializer, OutputStream stream) throws
+// IOException {
+// serializer.serialize(this, stream);
+// }
+
 }

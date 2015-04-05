@@ -1,9 +1,10 @@
 package org.jehanson.livedata.io;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
 
 import org.jehanson.livedata.LDElement;
+import org.jehanson.livedata.LiveData;
 
 /**
  * 
@@ -11,5 +12,8 @@ import org.jehanson.livedata.LDElement;
  */
 public interface LDParser {
 
-	public LDElement parse(Reader r) throws IOException, LDFormatException;
+	public void parse(LiveData obj, InputStream stream) throws IOException,
+			LDFormatException;
+	
+	public LDElement parse(InputStream stream) throws IOException, LDFormatException;
 }

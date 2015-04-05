@@ -196,8 +196,8 @@ public class LDMap extends LDElement implements LDContainer {
 // }
 
 	@Override
-	public LDElement.VType getEType() {
-		return LDElement.VType.MAP;
+	public LDElement.EType getEType() {
+		return LDElement.EType.MAP;
 	}
 
 	@Override
