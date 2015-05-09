@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jehanson.livedata.LDElement;
-import org.jehanson.livedata.LiveData;
+import org.jehanson.livedata.LDObject;
 import org.jehanson.livedata.elements.LDBoolean;
 import org.jehanson.livedata.elements.LDDouble;
 import org.jehanson.livedata.elements.LDList;
@@ -441,7 +441,7 @@ public class LDParserJSON implements LDParser {
 	// =================================
 
 	@Override
-	public void parse(LiveData obj, InputStream inputStream) throws IOException,
+	public void parse(LDObject obj, InputStream inputStream) throws IOException,
 			LDFormatException {
 		if (inputStream == null)
 			throw new IllegalArgumentException("inputStream cannot be null");

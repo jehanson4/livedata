@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.jehanson.livedata.LDElement;
-import org.jehanson.livedata.LiveData;
+import org.jehanson.livedata.LDObject;
 
 /**
  * 
@@ -12,7 +12,7 @@ import org.jehanson.livedata.LiveData;
  */
 public interface LDParser {
 
-	public void parse(LiveData obj, InputStream stream) throws IOException,
+	public void parse(LDObject obj, InputStream stream) throws IOException,
 			LDFormatException;
 	
 	public LDElement parse(InputStream stream) throws IOException, LDFormatException;

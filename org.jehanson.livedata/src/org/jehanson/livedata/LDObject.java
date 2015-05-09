@@ -1,5 +1,6 @@
 package org.jehanson.livedata;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jehanson.livedata.elements.LDMap;
@@ -9,16 +10,17 @@ import org.jehanson.livedata.elements.LDMap;
  * 
  * @author jehanson
  */
-public class LiveData extends LDMap {
+public class LDObject extends LDMap {
 
-	private List<LDListener> listeners;
+	private final List<LDListener> listeners;
 
-	public LiveData() {
+	public LDObject() {
 		this(LDMap.defaultKeyOrder);
 	}
 
-	public LiveData(KeyOrder keyOrder) {
+	public LDObject(KeyOrder keyOrder) {
 		super(keyOrder);
+		listeners = new ArrayList<LDListener>();
 	}
 
 	@Override

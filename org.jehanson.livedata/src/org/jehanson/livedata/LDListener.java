@@ -9,11 +9,11 @@ public interface LDListener {
 	// TODO support for batch changes
 
 	/** experimental */
-	public void valueChanged(LiveData data);
+	public void valueChanged(LDObject data);
 
 	/** experimental */
-	public void structureChanged(LiveData data);
+	public void structureChanged(LDObject data);
 	
 	/** experimental */
-	public void referenceChanged(LiveData data);
+	public void referenceChanged(LDObject data);
 }
