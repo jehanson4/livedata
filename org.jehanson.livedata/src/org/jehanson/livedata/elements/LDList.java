@@ -109,7 +109,7 @@ public class LDList extends LDElement implements LDContainer {
 	
 //	@Override
 //	public void copyFrom(LDObject dobj) throws LDException {
-//		LNList b = LiveData.asList(dobj);
+//		LNList b = LDObject.asList(dobj);
 //		if (b == null)
 //			throw new LDException("cannot convert to " + this.getEType().getName()
 //					+ ": " + dobj);
