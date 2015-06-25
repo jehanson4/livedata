@@ -236,7 +236,7 @@ public class LDList extends LDElement implements LDContainer {
 			elem.unsetParent();
 			throw e;
 		}
-		notifyStructureChange();
+		notifyStructureChange(this);
 	}
 
 	public void addChild(int idx, LDElement elem) {
@@ -250,7 +250,7 @@ public class LDList extends LDElement implements LDContainer {
 			elem.unsetParent();
 			throw e;
 		}
-		notifyStructureChange();
+		notifyStructureChange(this);
 	}
 
 	public LDElement setChild(int idx, LDElement elem) {
@@ -266,14 +266,14 @@ public class LDList extends LDElement implements LDContainer {
 			elem.unsetParent();
 			throw e;
 		}
-		notifyStructureChange();
+		notifyStructureChange(this);
 		return prevChild;
 	}
 
 	public LDElement removeChild(int idx) {
 		LDElement prevChild = children.remove(idx);
 		prevChild.unsetParent();
-		notifyStructureChange();
+		notifyStructureChange(this);
 		return prevChild;
 	}
 
@@ -282,7 +282,7 @@ public class LDList extends LDElement implements LDContainer {
 			for (LDElement c : children)
 				c.unsetParent();
 			children.clear();
-			notifyStructureChange();
+			notifyStructureChange(this);
 		}
 	}
 
@@ -335,19 +335,19 @@ public class LDList extends LDElement implements LDContainer {
 		writer.print("]");
 	}
 
+//	@Override
+//	public void childReferenceChanged() {
+//		// notifyReferenceChange();
+//	}
+
 	@Override
-	public void childReferenceChanged() {
-		notifyReferenceChange();
+	public void childStructureChanged(LDContainer container) {
+		notifyStructureChange(container);
 	}
 
 	@Override
-	public void childStructureChanged() {
-		notifyStructureChange();
-	}
-
-	@Override
-	public void childValueChanged() {
-		notifyValueChange();
+	public void childValueChanged(LDElement value) {
+		notifyValueChange(value);
 	}
 
 }

@@ -283,7 +283,7 @@ public class LDMap extends LDElement implements LDContainer {
 		LDElement prevChild = children.put(k, elem);
 		if (prevChild != null)
 			prevChild.unsetParent();
-		notifyStructureChange();
+		notifyStructureChange(this);
 		return prevChild;
 	}
 
@@ -291,7 +291,7 @@ public class LDMap extends LDElement implements LDContainer {
 		LDElement prevChild = children.remove(key);
 		if (prevChild != null) {
 			prevChild.unsetParent();
-			notifyStructureChange();
+			notifyStructureChange(this);
 		}
 		return prevChild;
 	}
@@ -307,7 +307,7 @@ public class LDMap extends LDElement implements LDContainer {
 			if (prevChild != null)
 				prevChild.unsetParent();
 		}
-		notifyStructureChange();
+		notifyStructureChange(this);
 	}
 
 	@Override
@@ -366,19 +366,19 @@ public class LDMap extends LDElement implements LDContainer {
 		writer.print("}");
 	}
 
+//	@Override
+//	public void childReferenceChanged() {
+//		notifyReferenceChange();
+//	}
+
 	@Override
-	public void childReferenceChanged() {
-		notifyReferenceChange();
+	public void childStructureChanged(LDContainer container) {
+		notifyStructureChange(container);
 	}
 
 	@Override
-	public void childStructureChanged() {
-		notifyStructureChange();
-	}
-
-	@Override
-	public void childValueChanged() {
-		notifyValueChange();
+	public void childValueChanged(LDElement value) {
+		notifyValueChange(value);
 	}
 
 	// ===================================

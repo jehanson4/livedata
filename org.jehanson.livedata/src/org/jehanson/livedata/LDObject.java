@@ -39,33 +39,14 @@ public class LDObject extends LDMap {
 	}
 
 	@Override
-	public void childReferenceChanged() {
+	public void childStructureChanged(LDContainer container) {
 		for (LDListener listener : listeners)
-			listener.referenceChanged(this);
+			listener.structureChanged(this, container);
 	}
 
 	@Override
-	public void childStructureChanged() {
+	public void childValueChanged(LDElement value) {
 		for (LDListener listener : listeners)
-			listener.structureChanged(this);
+			listener.valueChanged(this, value);
 	}
-
-	@Override
-	public void childValueChanged() {
-		for (LDListener listener : listeners)
-			listener.valueChanged(this);
-	}
-
-// /** Syntactic sugar */
-// public void load(LDParser parser, InputStream stream) throws
-// LDFormatException, IOException {
-// parser.parse(this, stream);
-// }
-//
-// /** Syntactic sugar */
-// public void store(LDSerializer serializer, OutputStream stream) throws
-// IOException {
-// serializer.serialize(this, stream);
-// }
-
 }

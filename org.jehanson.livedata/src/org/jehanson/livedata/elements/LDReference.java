@@ -67,7 +67,7 @@ public class LDReference extends LDElement {
 			throw new IllegalArgumentException("value cannot be null");
 		if (!this.value.equals(value)) {
 			this.value = value;
-			notifyReferenceChange();
+			notifyValueChange(this);
 		}
 	}
 

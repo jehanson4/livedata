@@ -316,19 +316,14 @@ public abstract class LDElement {
 		return new TreeIterator(this);
 	}
 
-	protected void notifyReferenceChange() {
+	protected void notifyStructureChange(LDContainer container) {
 		if (parent != null)
-			parent.childReferenceChanged();
+			parent.childStructureChanged(container);
 	}
 
-	protected void notifyStructureChange() {
+	protected void notifyValueChange(LDElement element) {
 		if (parent != null)
-			parent.childStructureChanged();
-	}
-
-	protected void notifyValueChange() {
-		if (parent != null)
-			parent.childValueChanged();
+			parent.childValueChanged(element);
 	}
 
 	/**

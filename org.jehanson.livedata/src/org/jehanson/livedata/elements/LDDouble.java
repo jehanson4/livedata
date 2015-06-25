@@ -65,7 +65,7 @@ public class LDDouble extends LDElement {
 	public void setValue(double value) {
 		if (value != this.value) {
 			this.value = value;
-			notifyValueChange();
+			notifyValueChange(this);
 		}
 	}
 

@@ -9,11 +9,10 @@ import java.util.Iterator;
  */
 public interface LDContainer {
 
-	// maybe...
-	// addChild(Object key, LDObject child
-	// removeChild(Object key)
-	// removeAllChildren()
-
+	// MAYBE removeChild(Object key)
+	// MAYBE clear()
+	// MAYBE addChildren(Iterable<KVPair>> elems);
+	
 	public boolean isEmpty();
 
 	/**
@@ -56,8 +55,8 @@ public interface LDContainer {
 	 * NOTE 1: If there are multiple such children, returns the first one
 	 * encountered.
 	 * 
-	 * NOTE 2: for list-like containers, the key associated with a given child may
-	 * change over time.
+	 * NOTE 2: for list-like containers, the key associated with a given child
+	 * may change over time.
 	 * 
 	 * @param elem
 	 *            Not null.
@@ -71,8 +70,8 @@ public interface LDContainer {
 	 * Returns the child currently associated with the given key. Returns null
 	 * if no such child is found.
 	 * 
-	 * NOTE: for list-like containers, the key associated with a given
-	 * child may change over time.
+	 * NOTE: for list-like containers, the key associated with a given child may
+	 * change over time.
 	 * 
 	 * @param key
 	 *            The key in question
@@ -115,29 +114,20 @@ public interface LDContainer {
 	public Iterator<LDCursor> childIterator(LDPath basePath);
 
 	/**
-	 * Informs this container that a value in one of its children has changed.
+	 * Informs this container that the given descendant value has changed.
 	 * <p>
-	 * This method is called by a container's children when they are modified.
-	 * Users should not bother to call it.
+	 * <b>SPI method.</b> This method is called by an element when its value is
+	 * changed. Users should not call it.
 	 */
-	public void childValueChanged();
+	public void childValueChanged(LDElement value);
 
 	/**
-	 * Informs this container that a reference in one of its children has
-	 * changed.
+	 * Informs this container that the set of children in the given descendant
+	 * container has changed.
 	 * <p>
-	 * This method is called by a container's children when they are modified.
-	 * Users should not bother to call it.
+	 * <b>SPI method.</b> This method is called by a container when it has
+	 * children added, removed, or replaced. Users should not call it.
 	 */
-	public void childReferenceChanged();
-
-	/**
-	 * Informs this container that the structure of one of its children has
-	 * changed.
-	 * <p>
-	 * This method is called by a container's children when they are modified.
-	 * Users should not bother to call it.
-	 */
-	public void childStructureChanged();
+	public void childStructureChanged(LDContainer container);
 
 }
