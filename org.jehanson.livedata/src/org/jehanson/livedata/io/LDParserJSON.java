@@ -215,7 +215,7 @@ public class LDParserJSON implements LDParser {
 				unread(c);
 				for (;;) {
 					String key = readJsonString();
-					if (!LDMap.isKey(key))
+					if (!map.isValidKey(key))
 						throw new LDFormatException(errorMessage("Invalid key: " + key));
 					c = skipWhitespace();
 					if (c != LDParserJSON.KEY_VALUE_SEP_CHAR)

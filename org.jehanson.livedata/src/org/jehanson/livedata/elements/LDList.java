@@ -41,8 +41,7 @@ public class LDList extends LDElement implements LDContainer {
 		@Override
 		public LDCursor next() {
 			if (idx < children.size()) {
-				LDCursor cc =
-						new LDCursor(parentPath.extend(idx), children.get(idx));
+				LDCursor cc = new LDCursor(parentPath.extend(idx), children.get(idx));
 				idx++;
 				return cc;
 			}
@@ -92,32 +91,33 @@ public class LDList extends LDElement implements LDContainer {
 	}
 
 	/**
-	 * Indicates whether this list contains all the members of list2.
-	 * Does not pay attention to element indices.
+	 * Indicates whether this list contains all the members of list2. Does not
+	 * pay attention to element indices.
+	 * 
 	 * @param list2
 	 * @return true if this list contains the member of list2, false otherwise.
 	 */
 	public boolean contains(LDList list2) {
 		if (list2 == null)
 			throw new IllegalArgumentException("list2 cannot be null");
-		for (LDElement elem2: list2.children) {
-			if (this.findChild(elem2) == null)
+		for (LDElement elem2 : list2.children) {
+			if (this.locateChild(elem2) == null)
 				return false;
 		}
 		return true;
 	}
-	
-//	@Override
-//	public void copyFrom(LDObject dobj) throws LDException {
-//		LNList b = LDObject.asList(dobj);
-//		if (b == null)
-//			throw new LDException("cannot convert to " + this.getEType().getName()
-//					+ ": " + dobj);
-//		this.removeAllChildren();
-//		for (int i = 0; i < b.getChildCount(); i++) {
-//			this.addChild(b.getChild(i).deepCopy());
-//		}
-//	}
+
+// @Override
+// public void copyFrom(LDObject dobj) throws LDException {
+// LNList b = LDObject.asList(dobj);
+// if (b == null)
+// throw new LDException("cannot convert to " + this.getEType().getName()
+// + ": " + dobj);
+// this.removeAllChildren();
+// for (int i = 0; i < b.getChildCount(); i++) {
+// this.addChild(b.getChild(i).deepCopy());
+// }
+// }
 
 	@Override
 	public LDElement.EType getEType() {
@@ -135,22 +135,72 @@ public class LDList extends LDElement implements LDContainer {
 	}
 
 	@Override
-	public LDElement getChild(Object key) {
+	public boolean isValidKey(Object key) {
 		try {
-			int k;
-			if (key instanceof Number)
-				k = ((Number) key).intValue();
-			else
-				k = Integer.parseInt(String.valueOf(key));
-			return getChild(k);
+			asListIndex(key);
+			return true;
 		}
-		catch (NumberFormatException e) {
-			return null;
+		catch (Exception e) {
+			return false;
 		}
 	}
 
 	@Override
-	public Number findChild(LDElement elem) {
+	public LDElement getChild(Object key) {
+		try {
+			int k = asListIndex(key);
+			return getChild(k);
+		}
+		catch (NumberFormatException e) {
+			throw new IllegalArgumentException("Bad key: " + key
+					+ " -- must be nonnegative integer.");
+		}
+	}
+
+	/**
+	 * Converts the given object into a list index (i.e., a non-negative int).
+	 * 
+	 * @param obj
+	 * @return the list index.
+	 * @throws NumberFormatException
+	 * @throws IllegalArgumentException
+	 */
+	public static int asListIndex(Object obj) throws NumberFormatException,
+			IllegalArgumentException {
+		int k;
+		if (obj instanceof Number)
+			k = ((Number) obj).intValue();
+		else
+			k = Integer.parseInt(String.valueOf(obj));
+		if (!(k >= 0))
+			throw new IllegalArgumentException("Bad key: " + k + " -- must be >= 0.");
+		return k;
+	}
+
+	/**
+	 * Converts the given key to a list index and puts the given element into
+	 * the list at that index. If necessary, extends the list by adding LDVoid
+	 * elements.
+	 * <p>
+	 * Caution: for very large indices this can cause out of memory errors.
+	 * 
+	 * @see org.jehanson.livedata.LDContainer#putChild(java.lang.String,
+	 *      org.jehanson.livedata.LDElement)
+	 */
+	@Override
+	public LDElement putChild(Object key, LDElement elem) {
+		int k = asListIndex(key);
+		if (k <= children.size())
+			return setChild(k, elem);
+
+		while (k > children.size())
+			addChild(children.size(), new LDVoid());
+		addChild(k, elem);
+		return null;
+	}
+
+	@Override
+	public Number locateChild(LDElement elem) {
 		if (elem == null)
 			throw new IllegalArgumentException("elem cannot be null");
 		for (int i = 0, n = children.size(); i < n; i++) {
@@ -161,7 +211,7 @@ public class LDList extends LDElement implements LDContainer {
 	}
 
 	@Override
-	public Number findChildEqualTo(LDElement elem) {
+	public Number locateChildEqualTo(LDElement elem) {
 		if (elem == null)
 			throw new IllegalArgumentException("elem cannot be null");
 		for (int i = 0, n = children.size(); i < n; i++) {
@@ -170,7 +220,6 @@ public class LDList extends LDElement implements LDContainer {
 		}
 		return null;
 	}
-
 
 	public LDElement getChild(int idx) {
 		return children.get(idx);

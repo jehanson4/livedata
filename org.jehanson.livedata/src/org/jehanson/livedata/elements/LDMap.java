@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import org.jehanson.livedata.LDContainer;
 import org.jehanson.livedata.LDCursor;
@@ -68,12 +69,13 @@ public class LDMap extends LDElement implements LDContainer {
 	// Variables
 	// ==============================
 
+	/** NOT final: see {@LDMap#setDefaultKeyOrder}. */
 	public static KeyOrder defaultKeyOrder = KeyOrder.ANY;
+
+	private static final Pattern whitespaceRegex = Pattern.compile("\\s");
 
 	private final KeyOrder keyOrder;
 	private final Map<String, LDElement> children;
-
-	// private static final Pattern whitespacePattern = Pattern.compile("\\s");
 
 	// ==============================
 	// Creation
@@ -123,38 +125,48 @@ public class LDMap extends LDElement implements LDContainer {
 	 *            the string in question
 	 * @return true if s is a valid key, false if invalid or null.
 	 */
-	public static boolean isKey(String s) {
-		if (s == null || s.isEmpty() || s.equals("null"))
-			return false;
-
-		// SOMEDAY: compare performance w/ regex approach
-		// Matcher matcher = whitespacePattern.matcher(s);
-		// if (matcher.find())
-		// return false;
-
-		for (int i = 0, n = s.length(); i < n; i++) {
-			if (Character.isWhitespace(s.charAt(i)))
-				return false;
+	@Override
+	public boolean isValidKey(Object key) {
+		try {
+			asMapKey(key);
+			return true;
 		}
-
-		return true;
+		catch (Exception e) {
+			return false;
+		}
 	}
 
+	/**
+	 * Converts the given object into a map key if possible.
+	 * <p>
+	 * A map key is a non-empty string, not equal to "null", and containing no
+	 * whitespace chars.
+	 * 
+	 * @param key
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	public static String asMapKey(Object key) throws IllegalArgumentException {
+		if (key == null)
+			throw new IllegalArgumentException("key cannot be null");
+		String k = key.toString();
+		if (k.isEmpty() || k.equals("null") || whitespaceRegex.matcher(k).find())
+			throw new IllegalArgumentException("Bad key: \"" + key + "\"");
+		return k;
+	}
+
+	/**
+	 * Modifies or replaces the given string as necessary in order to make it a
+	 * map key.
+	 * 
+	 * @param s
+	 *            The input string
+	 * @return The map key.
+	 */
 	public static String fixKey(String s) {
 		if (s == null || s.isEmpty() || s.equals("null"))
 			return "key";
-
-		// SOMEDAY: compare performance w/ regex approach
-		// Matcher matcher = whitespacePattern.matcher(s);
-		// return matcher.replaceAll("_");
-
-		StringBuilder sbuf = new StringBuilder();
-		char c;
-		for (int i = 0, n = s.length(); i < n; i++) {
-			c = s.charAt(i);
-			sbuf.append(Character.isWhitespace(c) ? '_' : c);
-		}
-		return sbuf.toString();
+		return whitespaceRegex.matcher(s).replaceAll("_");
 	}
 
 	public String findUnusedKey(String hint) {
@@ -227,11 +239,14 @@ public class LDMap extends LDElement implements LDContainer {
 
 	@Override
 	public LDElement getChild(Object key) {
-		String skey = (key == null) ? null : key.toString();
-		return getChild(skey);
+		if (!isValidKey(key))
+			throw new IllegalArgumentException("Bad key: " + key);
+		return children.get(String.valueOf(key));
 	}
 
 	public LDElement getChild(String key) {
+		if (!isValidKey(key))
+			throw new IllegalArgumentException("Bad key: " + key);
 		return children.get(key);
 	}
 
@@ -240,7 +255,7 @@ public class LDMap extends LDElement implements LDContainer {
 	}
 
 	@Override
-	public String findChild(LDElement elem) {
+	public String locateChild(LDElement elem) {
 		if (elem == null)
 			throw new IllegalArgumentException("elem cannot be null");
 		for (Entry<String, LDElement> e : children.entrySet()) {
@@ -251,7 +266,7 @@ public class LDMap extends LDElement implements LDContainer {
 	}
 
 	@Override
-	public String findChildEqualTo(LDElement elem) {
+	public String locateChildEqualTo(LDElement elem) {
 		if (elem == null)
 			throw new IllegalArgumentException("elem cannot be null");
 		for (Entry<String, LDElement> e : children.entrySet()) {
@@ -261,13 +276,11 @@ public class LDMap extends LDElement implements LDContainer {
 		return null;
 	}
 
-	public LDElement putChild(String key, LDElement elem) {
-		if (!isKey(key))
-			throw new IllegalArgumentException("Bad key: " + key);
-		if (elem == null)
-			throw new IllegalArgumentException("elem cannot be null");
+	@Override
+	public LDElement putChild(Object key, LDElement elem) {
+		String k = asMapKey(key);
 		elem.setParent(this);
-		LDElement prevChild = children.put(key, elem);
+		LDElement prevChild = children.put(k, elem);
 		if (prevChild != null)
 			prevChild.unsetParent();
 		notifyStructureChange();

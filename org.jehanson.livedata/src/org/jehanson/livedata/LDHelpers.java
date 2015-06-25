@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.jehanson.livedata.LDElement.EType;
 import org.jehanson.livedata.elements.LDBoolean;
 import org.jehanson.livedata.elements.LDDouble;
 import org.jehanson.livedata.elements.LDList;
@@ -43,6 +44,10 @@ public class LDHelpers {
 		default:
 			throw new UnsupportedOperationException("No case found for type " + type);
 		}
+	}
+
+	public static EType bestContainerType(Object childKey) {
+		return (childKey instanceof Number) ? EType.LIST : EType.MAP;
 	}
 
 	public static LDBoolean asBoolean(LDElement item) {
