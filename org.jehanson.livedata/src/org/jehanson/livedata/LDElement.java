@@ -318,12 +318,12 @@ public abstract class LDElement {
 
 	protected void notifyStructureChange(LDContainer container) {
 		if (parent != null)
-			parent.childStructureChanged(container);
+			parent.spiStructureChanged(container);
 	}
 
 	protected void notifyValueChange(LDElement element) {
 		if (parent != null)
-			parent.childValueChanged(element);
+			parent.spiValueChanged(element);
 	}
 
 	/**

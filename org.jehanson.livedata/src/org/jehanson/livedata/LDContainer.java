@@ -12,7 +12,7 @@ public interface LDContainer {
 	// MAYBE removeChild(Object key)
 	// MAYBE clear()
 	// MAYBE addChildren(Iterable<KVPair>> elems);
-	
+
 	public boolean isEmpty();
 
 	/**
@@ -118,8 +118,12 @@ public interface LDContainer {
 	 * <p>
 	 * <b>SPI method.</b> This method is called by an element when its value is
 	 * changed. Users should not call it.
+	 * 
+	 * @param value
+	 *            the element whose value changed
+	 * @see {@link LDElement#notifyValueChange(LDElement)}
 	 */
-	public void childValueChanged(LDElement value);
+	public void spiValueChanged(LDElement value);
 
 	/**
 	 * Informs this container that the set of children in the given descendant
@@ -127,7 +131,11 @@ public interface LDContainer {
 	 * <p>
 	 * <b>SPI method.</b> This method is called by a container when it has
 	 * children added, removed, or replaced. Users should not call it.
+	 * 
+	 * @param container
+	 *            the container whose structure changed.
+	 * @see {@link LDElement#notifyStructureChange(LDContainer)}
 	 */
-	public void childStructureChanged(LDContainer container);
+	public void spiStructureChanged(LDContainer container);
 
 }

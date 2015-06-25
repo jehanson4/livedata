@@ -341,12 +341,12 @@ public class LDList extends LDElement implements LDContainer {
 //	}
 
 	@Override
-	public void childStructureChanged(LDContainer container) {
+	public void spiStructureChanged(LDContainer container) {
 		notifyStructureChange(container);
 	}
 
 	@Override
-	public void childValueChanged(LDElement value) {
+	public void spiValueChanged(LDElement value) {
 		notifyValueChange(value);
 	}
 

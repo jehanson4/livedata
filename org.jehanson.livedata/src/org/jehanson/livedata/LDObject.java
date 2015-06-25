@@ -39,13 +39,13 @@ public class LDObject extends LDMap {
 	}
 
 	@Override
-	public void childStructureChanged(LDContainer container) {
+	public void spiStructureChanged(LDContainer container) {
 		for (LDListener listener : listeners)
 			listener.structureChanged(this, container);
 	}
 
 	@Override
-	public void childValueChanged(LDElement value) {
+	public void spiValueChanged(LDElement value) {
 		for (LDListener listener : listeners)
 			listener.valueChanged(this, value);
 	}
