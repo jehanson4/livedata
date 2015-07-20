@@ -71,7 +71,7 @@ public class LDString extends LDElement {
 			throw new IllegalArgumentException("value cannot be null");
 		if (!value.equals(this.value)) {
 			this.value = value;
-			notifyValueChange(this);
+			fireValueChanged();
 		}
 	}
 

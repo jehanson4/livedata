@@ -97,7 +97,8 @@ public class LDMap extends LDElement implements LDContainer {
 		this.children = createInnerMap(keyOrder);
 		for (String k : item.getChildKeys()) {
 			LDElement v = item.getChild(k);
-			this.putChild(k, v.deepCopy());
+			LDElement c = v.deepCopy();
+			this.putChild(k, c);
 		}
 	}
 
@@ -202,11 +203,6 @@ public class LDMap extends LDElement implements LDContainer {
 		return true;
 	}
 
-// @Override
-// public void copyFrom(LDObject dobj) throws LDException {
-// throw new UnsupportedOperationException("not implemented");
-// }
-
 	@Override
 	public LDElement.EType getEType() {
 		return LDElement.EType.MAP;
@@ -216,22 +212,6 @@ public class LDMap extends LDElement implements LDContainer {
 	public boolean isEmpty() {
 		return children.isEmpty();
 	}
-
-// /**
-// * Convenience method to check whether this map does NOT already have a
-// * child w/ given key and content type different from the desired type.
-// *
-// * @param key
-// * The key
-// * @param type
-// * The desired type
-// * @return true if there is no child with the given key and a type different
-// * from the desired type.
-// */
-// public boolean isChildPermitted(String key, EType type) {
-// LDObject c = children.get(key);
-// return (c == null || c.getIType() == type);
-// }
 
 	public Collection<String> getChildKeys() {
 		return Collections.unmodifiableCollection(children.keySet());
@@ -281,9 +261,10 @@ public class LDMap extends LDElement implements LDContainer {
 		String k = asMapKey(key);
 		elem.setParent(this);
 		LDElement prevChild = children.put(k, elem);
-		if (prevChild != null)
+		if (prevChild != null) {
 			prevChild.unsetParent();
-		notifyStructureChange(this);
+		}
+		fireStructureChanged();
 		return prevChild;
 	}
 
@@ -291,7 +272,7 @@ public class LDMap extends LDElement implements LDContainer {
 		LDElement prevChild = children.remove(key);
 		if (prevChild != null) {
 			prevChild.unsetParent();
-			notifyStructureChange(this);
+			fireStructureChanged();
 		}
 		return prevChild;
 	}
@@ -307,7 +288,7 @@ public class LDMap extends LDElement implements LDContainer {
 			if (prevChild != null)
 				prevChild.unsetParent();
 		}
-		notifyStructureChange(this);
+		fireStructureChanged();
 	}
 
 	@Override
@@ -366,21 +347,6 @@ public class LDMap extends LDElement implements LDContainer {
 		writer.print("}");
 	}
 
-//	@Override
-//	public void childReferenceChanged() {
-//		notifyReferenceChange();
-//	}
-
-	@Override
-	public void spiStructureChanged(LDContainer container) {
-		notifyStructureChange(container);
-	}
-
-	@Override
-	public void spiValueChanged(LDElement value) {
-		notifyValueChange(value);
-	}
-
 	// ===================================
 	// Private
 	// ===================================
@@ -394,6 +360,21 @@ public class LDMap extends LDElement implements LDContainer {
 		default:
 			return new HashMap<String, LDElement>();
 		}
+	}
+
+	@Override
+	public void parentChanged(LDElement element) {
+		// NOP		
+	}
+
+	@Override
+	public void valueChanged(LDElement element) {
+		this.fireValueChanged();
+	}
+
+	@Override
+	public void structureChanged(LDElement element) {
+		this.fireStructureChanged();
 	}
 
 }

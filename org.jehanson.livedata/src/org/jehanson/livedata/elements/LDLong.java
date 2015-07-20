@@ -63,7 +63,7 @@ public class LDLong extends LDElement {
 	public void setValue(long value) {
 		if (value != this.value) {
 			this.value = value;
-			notifyValueChange(this);
+			fireValueChanged();
 		}
 	}
 

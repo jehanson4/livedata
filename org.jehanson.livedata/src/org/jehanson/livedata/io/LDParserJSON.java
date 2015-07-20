@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jehanson.livedata.LDElement;
-import org.jehanson.livedata.LDObject;
 import org.jehanson.livedata.elements.LDBoolean;
 import org.jehanson.livedata.elements.LDDouble;
 import org.jehanson.livedata.elements.LDList;
@@ -175,7 +174,7 @@ public class LDParserJSON implements LDParser {
 			if (c != LDParserJSON.LIST_SUFFIX) {
 				unread(c);
 				for (;;) {
-					LDElement dobj = readDataObject();
+					LDElement dobj = readElement();
 					list.addChild(dobj);
 					c = skipWhitespace();
 					if (c == LDParserJSON.LIST_SUFFIX)
@@ -190,7 +189,7 @@ public class LDParserJSON implements LDParser {
 			return list;
 		}
 
-		protected LDElement readDataObject() throws IOException, LDFormatException {
+		protected LDElement readElement() throws IOException, LDFormatException {
 			char c = skipWhitespace();
 			unread(c);
 			switch (c) {
@@ -222,7 +221,7 @@ public class LDParserJSON implements LDParser {
 						throw new LDFormatException(errorMessage("Expected \'"
 								+ LDParserJSON.KEY_VALUE_SEP_CHAR + "\', got \'"
 								+ (char) c + "\'"));
-					LDElement dobj = readDataObject();
+					LDElement dobj = readElement();
 					map.putChild(key, dobj);
 					c = skipWhitespace();
 					if (c == LDParserJSON.MAP_SUFFIX)
@@ -441,30 +440,13 @@ public class LDParserJSON implements LDParser {
 	// =================================
 
 	@Override
-	public void parse(LDObject obj, InputStream inputStream) throws IOException,
-			LDFormatException {
-		if (inputStream == null)
-			throw new IllegalArgumentException("inputStream cannot be null");
-		Reader r = new InputStreamReader(inputStream);
-		Tokenizer r2 = new Tokenizer(r);
-		try {
-			r2.readMapContents(obj);
-		}
-		finally {
-			// Does closing r2 close r as well? Yes it does.
-			// Does closing r close inputStream? I don't know!
-			r2.close();
-		}
-	}
-
-	@Override
 	public LDElement parse(InputStream inputStream) throws IOException, LDFormatException {
 		if (inputStream == null)
 			throw new IllegalArgumentException("stream cannot be null");
 		Reader r = new InputStreamReader(inputStream);
 		Tokenizer r2 = new Tokenizer(r);
 		try {
-			return r2.readDataObject();
+			return r2.readElement();
 		}
 		finally {
 			// Does closing r2 close r as well? Yes it does.

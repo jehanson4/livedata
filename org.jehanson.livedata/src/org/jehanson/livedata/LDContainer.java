@@ -7,7 +7,7 @@ import java.util.Iterator;
  * 
  * @author jehanson
  */
-public interface LDContainer {
+public interface LDContainer extends LDListener {
 
 	// MAYBE removeChild(Object key)
 	// MAYBE clear()
@@ -112,30 +112,5 @@ public interface LDContainer {
 	 *             if this optional method is not supported.
 	 */
 	public Iterator<LDCursor> childIterator(LDPath basePath);
-
-	/**
-	 * Informs this container that the given descendant value has changed.
-	 * <p>
-	 * <b>SPI method.</b> This method is called by an element when its value is
-	 * changed. Users should not call it.
-	 * 
-	 * @param value
-	 *            the element whose value changed
-	 * @see {@link LDElement#notifyValueChange(LDElement)}
-	 */
-	public void spiValueChanged(LDElement value);
-
-	/**
-	 * Informs this container that the set of children in the given descendant
-	 * container has changed.
-	 * <p>
-	 * <b>SPI method.</b> This method is called by a container when it has
-	 * children added, removed, or replaced. Users should not call it.
-	 * 
-	 * @param container
-	 *            the container whose structure changed.
-	 * @see {@link LDElement#notifyStructureChange(LDContainer)}
-	 */
-	public void spiStructureChanged(LDContainer container);
 
 }

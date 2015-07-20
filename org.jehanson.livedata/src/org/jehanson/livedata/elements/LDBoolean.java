@@ -64,7 +64,7 @@ public class LDBoolean extends LDElement {
 	public void setValue(boolean value) {
 		if (value != this.value) {
 			this.value = value;
-			notifyValueChange(this);
+			fireValueChanged();
 		}
 	}
 

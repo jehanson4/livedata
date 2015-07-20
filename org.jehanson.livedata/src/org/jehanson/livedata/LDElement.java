@@ -3,8 +3,10 @@ package org.jehanson.livedata;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A piece of information, or a collection of such.
@@ -259,6 +261,7 @@ public abstract class LDElement {
 	}
 
 	private LDContainer parent;
+	private List<LDListener> listeners;
 
 	// ===========================================
 	// Creation
@@ -266,6 +269,7 @@ public abstract class LDElement {
 
 	protected LDElement() {
 		this.parent = null;
+		this.listeners = null;
 	}
 
 	// ===========================================
@@ -286,13 +290,53 @@ public abstract class LDElement {
 	}
 
 	public void setParent(LDContainer parent) {
+		if (parent == null)
+			throw new IllegalArgumentException("parent cannot be null");
 		if (this.parent != null)
 			throw new IllegalStateException("Parent is already set");
+
 		this.parent = parent;
+		if (this.parent != null)
+			addListener(this.parent);
+		fireParentChanged();
 	}
 
 	public void unsetParent() {
+		if (this.parent == null)
+			return;
+
+		if (this.parent != null)
+			removeListener(this.parent);
 		this.parent = null;
+		fireParentChanged();
+	}
+	
+	public void replaceParent(LDContainer parent) {
+		if (parent == null)
+			throw new IllegalArgumentException("parent cannot be null");
+		if (this.parent == parent)
+			return;
+		
+		if (this.parent != null)
+			removeListener(this.parent);
+		this.parent = parent;
+		if (this.parent != null)
+			addListener(this.parent);
+		fireParentChanged();
+	}
+	
+	public void addListener(LDListener listener) {
+		if (listener == null)
+			throw new IllegalArgumentException("listener cannot be null");
+		if (listeners == null)
+			listeners = new ArrayList<LDListener>();
+		listeners.add(listener);
+	}
+	
+	public void removeListener(LDListener listener) {
+		if (listeners == null)
+			return;
+		listeners.remove(listener);
 	}
 	
 	@Override
@@ -316,16 +360,6 @@ public abstract class LDElement {
 		return new TreeIterator(this);
 	}
 
-	protected void notifyStructureChange(LDContainer container) {
-		if (parent != null)
-			parent.spiStructureChanged(container);
-	}
-
-	protected void notifyValueChange(LDElement element) {
-		if (parent != null)
-			parent.spiValueChanged(element);
-	}
-
 	/**
 	 * Convenience method for printing appropriate whitespace before, between,
 	 * or after elements of a list or map.
@@ -344,5 +378,28 @@ public abstract class LDElement {
 		}
 		else if (betweenElements)
 			writer.print(" ");
+	}
+	
+	protected void fireParentChanged() {
+		if (listeners == null)
+			return;
+		for (LDListener listener : listeners) 
+			listener.parentChanged(this);
+	}
+	
+	protected void fireStructureChanged() {
+		if (listeners == null)
+			return;
+		for (LDListener listener : listeners) 
+			listener.structureChanged(this);
+		
+	}
+	
+	protected void fireValueChanged() {
+		if (listeners == null)
+			return;
+		for (LDListener listener : listeners) 
+			listener.valueChanged(this);
+		
 	}
 }
