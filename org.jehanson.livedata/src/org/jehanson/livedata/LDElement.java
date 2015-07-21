@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -391,8 +392,24 @@ public abstract class LDElement {
 		if (listeners == null)
 			return;
 		for (LDListener listener : listeners) 
-			listener.structureChanged(this);
-		
+			listener.structureChanged(this);	
+	}
+	
+	protected List<LDListener> getListeners() {
+		if (this.listeners == null)
+			return Collections.emptyList();
+		else
+			return this.listeners;
+	}
+	
+	protected void propagateStructureChange(LDElement element) {
+		if (parent != null)
+			parent.structureChanged(element);
+	}
+	
+	protected void propagateValueChange(LDElement element) {
+		if (parent != null)
+			parent.valueChanged(element);
 	}
 	
 	protected void fireValueChanged() {
@@ -400,6 +417,5 @@ public abstract class LDElement {
 			return;
 		for (LDListener listener : listeners) 
 			listener.valueChanged(this);
-		
 	}
 }

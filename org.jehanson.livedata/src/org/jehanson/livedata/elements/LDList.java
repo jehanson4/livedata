@@ -338,18 +338,17 @@ public class LDList extends LDElement implements LDContainer {
 
 	@Override
 	public void parentChanged(LDElement element) {
-		// NOP
-		
+		// NOP		
 	}
 
 	@Override
 	public void valueChanged(LDElement element) {
-		this.fireValueChanged();
+		this.propagateValueChange(element);
 	}
 
 	@Override
 	public void structureChanged(LDElement element) {
-		this.fireStructureChanged();
+		this.propagateStructureChange(element);
 	}
 
 }

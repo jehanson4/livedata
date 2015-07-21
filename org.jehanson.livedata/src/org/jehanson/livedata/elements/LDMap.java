@@ -369,12 +369,12 @@ public class LDMap extends LDElement implements LDContainer {
 
 	@Override
 	public void valueChanged(LDElement element) {
-		this.fireValueChanged();
+		this.propagateValueChange(element);
 	}
 
 	@Override
 	public void structureChanged(LDElement element) {
-		this.fireStructureChanged();
+		this.propagateStructureChange(element);
 	}
 
 }
