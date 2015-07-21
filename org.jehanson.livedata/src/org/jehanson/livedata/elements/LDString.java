@@ -2,8 +2,8 @@ package org.jehanson.livedata.elements;
 
 import java.io.PrintWriter;
 
-import org.jehanson.livedata.LDException;
 import org.jehanson.livedata.LDElement;
+import org.jehanson.livedata.LDException;
 import org.jehanson.livedata.LDHelpers;
 
 /**

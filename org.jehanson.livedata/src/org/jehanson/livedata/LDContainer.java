@@ -2,6 +2,8 @@ package org.jehanson.livedata;
 
 import java.util.Iterator;
 
+import org.jehanson.livedata.elements.LDList;
+
 /**
  * Data item that holds other data items.
  * 
