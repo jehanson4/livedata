@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jehanson.livedata.LDElement;
+import org.jehanson.livedata.LDObject;
 import org.jehanson.livedata.elements.LDBoolean;
 import org.jehanson.livedata.elements.LDDouble;
 import org.jehanson.livedata.elements.LDList;
@@ -455,5 +456,22 @@ public class LDParserJSON implements LDParser {
 		}
 	}
 	
+	@Override
+	public void parse(LDObject obj, InputStream inputStream) throws IOException,
+			LDFormatException {
+		if (inputStream == null)
+			throw new IllegalArgumentException("inputStream cannot be null");
+		Reader r = new InputStreamReader(inputStream);
+		Tokenizer r2 = new Tokenizer(r);
+		try {
+			r2.readMapContents(obj);
+		}
+		finally {
+			// Does closing r2 close r as well? Yes it does.
+			// Does closing r close inputStream? I don't know!
+			r2.close();
+		}
+	}
+
 	
 }
