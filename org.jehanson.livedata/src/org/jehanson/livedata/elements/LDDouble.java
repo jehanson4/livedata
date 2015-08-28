@@ -3,7 +3,7 @@ package org.jehanson.livedata.elements;
 import java.io.PrintWriter;
 
 import org.jehanson.livedata.LDElement;
-import org.jehanson.livedata.LDException;
+import org.jehanson.livedata.LDTypeException;
 import org.jehanson.livedata.LDHelpers;
 
 /**
@@ -46,10 +46,10 @@ public class LDDouble extends LDElement {
 	}
 
 	// @Override
-	public void copyFrom(LDElement dobj) throws LDException {
-		LDDouble b = LDHelpers.asDouble(dobj);
+	public void copyFrom(LDElement dobj) throws LDTypeException {
+		LDDouble b = LDHelpers.optDouble(dobj);
 		if (b == null)
-			throw new LDException("cannot convert to " + this.getEType().getName() + ": " + dobj);
+			throw new LDTypeException("cannot convert to " + this.getEType().getName() + ": " + dobj);
 		this.setValue(b.getValue());
 	}
 
@@ -69,6 +69,9 @@ public class LDDouble extends LDElement {
 		}
 	}
 
+	public void setValue(Number value) {
+		setValue((value == null) ? 0 : value.doubleValue());
+	}
 	@Override
 	public int hashCode() {
 		int hc = 23;
@@ -88,7 +91,10 @@ public class LDDouble extends LDElement {
 
 	@Override
 	public void print(PrintWriter writer, int level, boolean insertLineBreaks) {
+		writer.print(getEType());
+		writer.print('{');
 		writer.print(value);
+		writer.print('}');
 	}
 
 }

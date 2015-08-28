@@ -41,7 +41,7 @@ public class LDList extends LDElement implements LDContainer {
 		@Override
 		public LDCursor next() {
 			if (idx < children.size()) {
-				LDCursor cc = new LDCursor(parentPath.extend(idx), children.get(idx));
+				LDCursor cc = new LDCursor(parentPath.addSegment(idx), children.get(idx));
 				idx++;
 				return cc;
 			}
@@ -107,17 +107,17 @@ public class LDList extends LDElement implements LDContainer {
 		return true;
 	}
 
-// @Override
-// public void copyFrom(LDObject dobj) throws LDException {
-// LNList b = LDObject.asList(dobj);
-// if (b == null)
-// throw new LDException("cannot convert to " + this.getEType().getName()
-// + ": " + dobj);
-// this.removeAllChildren();
-// for (int i = 0; i < b.getChildCount(); i++) {
-// this.addChild(b.getChild(i).deepCopy());
-// }
-// }
+	// @Override
+	// public void copyFrom(LDObject dobj) throws LDException {
+	// LNList b = LDObject.asList(dobj);
+	// if (b == null)
+	// throw new LDException("cannot convert to " + this.getEType().getName()
+	// + ": " + dobj);
+	// this.removeAllChildren();
+	// for (int i = 0; i < b.getChildCount(); i++) {
+	// this.addChild(b.getChild(i).deepCopy());
+	// }
+	// }
 
 	@Override
 	public LDElement.EType getEType() {
@@ -321,7 +321,8 @@ public class LDList extends LDElement implements LDContainer {
 
 	@Override
 	public void print(PrintWriter writer, int level, boolean insertLineBreaks) {
-		writer.print("[");
+		writer.print(getEType());
+		writer.print("{");
 		Iterator<LDElement> cIter = children.iterator();
 		if (cIter.hasNext()) {
 			printBreak(writer, level + 1, insertLineBreaks, false);
@@ -333,12 +334,12 @@ public class LDList extends LDElement implements LDContainer {
 			}
 			printBreak(writer, level, insertLineBreaks, false);
 		}
-		writer.print("]");
+		writer.print("}");
 	}
 
 	@Override
 	public void parentChanged(LDElement element) {
-		// NOP		
+		// NOP
 	}
 
 	@Override
@@ -351,4 +352,17 @@ public class LDList extends LDElement implements LDContainer {
 		this.propagateStructureChange(element);
 	}
 
+	public void replaceChildren(List<LDElement> newChildren) {
+		int oldSize = this.children.size();
+		int newSize = newChildren.size();
+		int shorter = (oldSize <= newSize) ? oldSize : newSize;
+		for (int i = 0; i < shorter; i++) {
+			if (!children.get(i).equals(newChildren.get(i)))
+				setChild(i, newChildren.get(i));
+		}
+		for (int i = newSize; i < oldSize; i++)
+			removeChild(i);
+		for (int i = oldSize; i < newSize; i++)
+			addChild(newChildren.get(i));
+	}
 }

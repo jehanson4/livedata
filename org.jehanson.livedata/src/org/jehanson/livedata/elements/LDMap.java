@@ -50,7 +50,7 @@ public class LDMap extends LDElement implements LDContainer {
 		@Override
 		public LDCursor next() {
 			Map.Entry<String, LDElement> e = base.next();
-			return new LDCursor(parentPath.extend(e.getKey()), e.getValue());
+			return new LDCursor(parentPath.addSegments(e.getKey()), e.getValue());
 		}
 
 		/**
@@ -151,7 +151,7 @@ public class LDMap extends LDElement implements LDContainer {
 		if (key == null)
 			throw new IllegalArgumentException("key cannot be null");
 		String k = key.toString();
-		if (k.isEmpty() || k.equals("null") || whitespaceRegex.matcher(k).find())
+		if (k.isEmpty() || k.equals("null") || whitespaceRegex.matcher(k).find() || !LDPath.isSegment(k))
 			throw new IllegalArgumentException("Bad key: \"" + key + "\"");
 		return k;
 	}
@@ -325,6 +325,7 @@ public class LDMap extends LDElement implements LDContainer {
 
 	@Override
 	public void print(PrintWriter writer, int level, boolean insertLineBreaks) {
+		writer.print(getEType());
 		writer.print("{");
 		Iterator<Map.Entry<String, LDElement>> cIter = children.entrySet().iterator();
 		Map.Entry<String, LDElement> c;

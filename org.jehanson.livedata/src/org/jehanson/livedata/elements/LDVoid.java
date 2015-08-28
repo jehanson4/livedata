@@ -3,7 +3,7 @@ package org.jehanson.livedata.elements;
 import java.io.PrintWriter;
 
 import org.jehanson.livedata.LDElement;
-import org.jehanson.livedata.LDException;
+import org.jehanson.livedata.LDTypeException;
 import org.jehanson.livedata.LDHelpers;
 
 /**
@@ -25,10 +25,10 @@ public class LDVoid extends LDElement {
 	}
 
 	// @Override
-	public void copyFrom(LDElement dobj) throws LDException {
-		LDVoid b = LDHelpers.asVoid(dobj);
+	public void copyFrom(LDElement dobj) throws LDTypeException {
+		LDVoid b = LDHelpers.optVoid(dobj);
 		if (b == null)
-			throw new LDException("cannot convert to " + this.getEType().getName()
+			throw new LDTypeException("cannot convert to " + this.getEType().getName()
 					+ ": " + dobj);
 	}
 

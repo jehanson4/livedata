@@ -1,4 +1,4 @@
-package org.jehanson.livedata.io;
+package org.jehanson.livedata.serialization;
 
 /**
  * Exception thrown when the creating an LDElement from serialized input data,

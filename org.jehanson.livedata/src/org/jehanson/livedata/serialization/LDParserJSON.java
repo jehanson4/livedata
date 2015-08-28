@@ -1,4 +1,4 @@
-package org.jehanson.livedata.io;
+package org.jehanson.livedata.serialization;
 
 import java.io.FilterReader;
 import java.io.IOException;

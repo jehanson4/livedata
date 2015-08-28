@@ -37,13 +37,13 @@ public abstract class LDElement {
 		@Override
 		public LDCursor next() {
 			LDCursor nn = unvisited.removeFirst();
-			LDContainer nc = LDHelpers.asContainer(nn.getElement());
+			LDContainer nc = LDHelpers.optContainer(nn.getElement());
 			if (nc != null) {
 				Iterator<LDCursor> ni = nc.childIterator(nn.getPath());
+				// TAGS: INEFFICIENT
 				// A little inefficient but easy to code: transfer all the
 				// children to unvisited queue. More efficient would be to put
-// nn's
-				// childIter itself on a queue...
+				// nn's childIter itself on a queue...
 				while (ni.hasNext())
 					unvisited.add(ni.next());
 			}
@@ -233,7 +233,7 @@ public abstract class LDElement {
 	
 		/**
 		 * Returns a name for the item that's easier on the human eye than the
-		 * bare enum value.
+		 * bare enum value. E.g., "list" or "int".
 		 * 
 		 * @returns the name
 		 */

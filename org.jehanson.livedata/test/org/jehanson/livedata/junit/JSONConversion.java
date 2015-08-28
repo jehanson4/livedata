@@ -7,11 +7,11 @@ import java.io.InputStream;
 
 import org.jehanson.livedata.LDElement;
 import org.jehanson.livedata.LDHelpers;
-import org.jehanson.livedata.io.LDFormatException;
-import org.jehanson.livedata.io.LDParserJSON;
-import org.jehanson.livedata.io.LDSerializer;
-import org.jehanson.livedata.io.LDSerializerJSON;
 import org.jehanson.livedata.samples.LDSamples;
+import org.jehanson.livedata.serialization.LDFormatException;
+import org.jehanson.livedata.serialization.LDParserJSON;
+import org.jehanson.livedata.serialization.LDSerializer;
+import org.jehanson.livedata.serialization.LDSerializerJSON;
 import org.junit.Test;
 
 /**

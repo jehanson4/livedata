@@ -14,14 +14,14 @@ public class LDPathUsage {
 
 	public static Map<String, LDPath> samples() {
 		 LDPath p0 = LDPath.root;
-		 LDPath p1 = p0.extend("foo");
-		 LDPath p2 = p0.extend(1);
-		 LDPath p3 = p0.extend("bar");
-		 LDPath p4 = p1.extend(2);
-		 LDPath p5 = p2.extend("hix");
-		 LDPath p6 = p2.extend(3);
-		 LDPath p7 = LDPath.root.extend("alpha").extend("beta").extend("gamma").extend("delta").extend("epsilon").extend("phi");
-		 LDPath p8 = LDPath.root.extend("many/segments/in/one/string");
+		 LDPath p1 = p0.addSegments("foo");
+		 LDPath p2 = p0.addSegment(1);
+		 LDPath p3 = p0.addSegments("bar");
+		 LDPath p4 = p1.addSegment(2);
+		 LDPath p5 = p2.addSegments("hix");
+		 LDPath p6 = p2.addSegment(3);
+		 LDPath p7 = LDPath.root.addSegments("alpha").addSegments("beta").addSegments("gamma").addSegments("delta").addSegments("epsilon").addSegments("phi");
+		 LDPath p8 = LDPath.root.addSegments("many/segments/in/one/string");
 		 
 		 Map<String, LDPath> map = new LinkedHashMap<String, LDPath>();
 		 map.put("p0",  p0);

@@ -3,7 +3,7 @@ package org.jehanson.livedata.elements;
 import java.io.PrintWriter;
 
 import org.jehanson.livedata.LDElement;
-import org.jehanson.livedata.LDException;
+import org.jehanson.livedata.LDTypeException;
 import org.jehanson.livedata.LDHelpers;
 
 /**
@@ -55,10 +55,10 @@ public class LDString extends LDElement {
 	}
 
 	// @Override
-	public void copyFrom(LDElement dobj) throws LDException {
-		LDString b = LDHelpers.asString(dobj);
+	public void copyFrom(LDElement dobj) throws LDTypeException {
+		LDString b = LDHelpers.optString(dobj);
 		if (b == null)
-			throw new LDException("cannot convert to " + this.getEType().getName() + ": " + dobj);
+			throw new LDTypeException("cannot convert to " + this.getEType().getName() + ": " + dobj);
 		this.setValue(b.getValue());
 	}
 
@@ -94,9 +94,14 @@ public class LDString extends LDElement {
 
 	@Override
 	public void print(PrintWriter writer, int level, boolean insertLineBreaks) {
-		writer.print('"');
-		writer.print(value);
-		writer.print('"');
+		writer.print(getEType());
+		writer.print('{');
+		if (value == null)
+			writer.print(value);
+		else {
+			writer.print(value);
+		}
+		writer.print('}');
 	}
 
 }

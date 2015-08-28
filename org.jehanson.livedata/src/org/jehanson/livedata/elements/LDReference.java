@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.net.URI;
 
 import org.jehanson.livedata.LDElement;
-import org.jehanson.livedata.LDException;
+import org.jehanson.livedata.LDTypeException;
 import org.jehanson.livedata.LDHelpers;
 
 /**
@@ -77,10 +77,10 @@ public class LDReference extends LDElement {
 	}
 
 	// @Override
-	public void copyFrom(LDElement dobj) throws LDException {
-		LDReference b = LDHelpers.asReference(dobj);
+	public void copyFrom(LDElement dobj) throws LDTypeException {
+		LDReference b = LDHelpers.optReference(dobj);
 		if (b == null)
-			throw new LDException("cannot convert to " + this.getEType().getName() + ": "
+			throw new LDTypeException("cannot convert to " + this.getEType().getName() + ": "
 					+ dobj);
 		this.setValue(b.getValue());
 	}
@@ -104,9 +104,10 @@ public class LDReference extends LDElement {
 
 	@Override
 	public void print(PrintWriter writer, int level, boolean insertLineBreaks) {
-		writer.print("<");
+		writer.println(getEType());
+		writer.print('{');
 		writer.print(value);
-		writer.print(">");
+		writer.print('}');
 	}
 
 }

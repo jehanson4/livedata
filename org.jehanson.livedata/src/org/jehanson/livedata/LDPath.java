@@ -28,28 +28,54 @@ public class LDPath {
 	}
 
 	public static LDPath create(int segment) {
-		return root.extend(segment);
+		return root.addSegment(segment);
 	}
 
 	public static LDPath create(String segments) {
-		return root.extend(segments);
+		return root.addSegments(segments);
 	}
 
 	public static LDPath create(LDPath prefix, int segment) {
 		if (prefix == null)
 			prefix = root;
-		return prefix.extend(segment);
+		return prefix.addSegment(segment);
 	}
 
 	public static LDPath create(LDPath prefix, String segments) {
 		if (prefix == null)
 			prefix = root;
-		return prefix.extend(segments);
+		return prefix.addSegments(segments);
 	}
 
 	// ==============================
 	// Operation
 	// =============================
+
+	public static boolean isSegment(Object obj) {
+		if (obj instanceof Number)
+			return isSegment((Number) obj);
+		if (obj instanceof String)
+			return isSegment((String) obj);
+		return false;
+	}
+
+	public static boolean isSegment(Number obj) {
+		try {
+			return ((Number) obj).intValue() >= 0;
+		}
+		catch (NullPointerException e) {
+			return false;
+		}
+	}
+
+	public static boolean isSegment(String s) {
+		try {
+			return !s.contains(separator);
+		}
+		catch (NullPointerException e) {
+			return false;
+		}
+	}
 
 	public LDPath removeSegments(int count) {
 		LDPath p = this;
@@ -63,37 +89,75 @@ public class LDPath {
 		return p;
 	}
 
-	public LDPath extend(Object obj) {
-		if (obj instanceof Number)
-			return extend((Number) obj);
-		else if (obj instanceof String)
-			return extend((String) obj);
-		else
-			throw new IllegalArgumentException("Bad value for obj: " + obj
-					+ " -- exected String or Number");
+	public LDPath addSegments(LDPath path) {
+		if (path == null)
+			throw new IllegalArgumentException("path cannot be null");
+		return this.addSegments(path.getSegments());
 	}
 
-	public LDPath extend(String segments) {
+	public LDPath addSegments(Iterable<?> segments) {
 		if (segments == null)
 			throw new IllegalArgumentException("segments cannot be null");
 		LDPath p = this;
-		String[] segArray = String.valueOf(segments).split(separatorRegex);
+		for (Object segment : segments) {
+			p = p.addSegment(segment);
+		}
+		return p;
+	}
+
+	public <T> LDPath addSegments(T[] segments) {
+		if (segments == null)
+			throw new IllegalArgumentException("segments cannot be null");
+		LDPath p = this;
+		for (Object segment : segments) {
+			p = p.addSegment(segment);
+		}
+		return p;
+	}
+
+	/**
+	 * Splits the string into segments then adds them in order.
+	 * 
+	 * @param segments
+	 * @return
+	 */
+	public LDPath addSegments(String segments) {
+		if (segments == null)
+			throw new IllegalArgumentException("segments cannot be null");
+		LDPath p = this;
+		String[] segArray = segments.split(separatorRegex);
 		for (String s : segArray)
 			p = new LDPath(p, s);
 		return p;
 	}
 
-	public LDPath extend(Number segment) {
+	public LDPath addSegment(Number segment) {
 		if (segment == null)
 			throw new IllegalArgumentException("segment cannot be null");
-		if (segment.intValue() < 0)
-			throw new IllegalArgumentException("Bad value: segment=" + segment.intValue()
-					+ " -- must be >= 0");
+		if (!isSegment(segment))
+			throw new IllegalArgumentException("Bad value: " + segment);
 		return new LDPath(this, segment);
 	}
-	
-	public LDPath extend(int segment) {
-		return this.extend(Integer.valueOf(segment));
+
+	public LDPath addSegment(String segment) {
+		if (segment == null)
+			throw new IllegalArgumentException("segment cannot be null");
+		if (!isSegment(segment))
+			throw new IllegalArgumentException("Bad value: \"" + segment + "\"");
+		return new LDPath(this, segment);
+	}
+
+	public LDPath addSegment(Object obj) {
+		if (obj instanceof Number)
+			return addSegment((Number) obj);
+		if (obj instanceof String)
+			return addSegment((String) obj);
+		throw new IllegalArgumentException("Bad value: obj=" + obj
+				+ " -- expected String or Number");
+	}
+
+	public LDPath addSegment(int segment) {
+		return this.addSegment(Integer.valueOf(segment));
 	}
 
 	public boolean isRoot() {
@@ -114,6 +178,7 @@ public class LDPath {
 
 	/**
 	 * Returns the segments of this path.
+	 * 
 	 * @return
 	 */
 	public List<Object> getSegments() {
@@ -126,26 +191,11 @@ public class LDPath {
 		}
 	}
 
-// /**
-// * Indicates whether this path is a prefix of, or equal to, the given path.
-// *
-// * @param path
-// * The given path.
-// * @return true if the given path is a prefix of this path.
-// */
-// public boolean isPrefixOf(LDPath path2) {
-// }
-
 	@Override
 	public String toString() {
-		if (isRoot()) {
-			return separator;
-		}
-		else {
-			StringBuilder sbuf = new StringBuilder();
-			this.buildPathString(sbuf);
-			return sbuf.toString();
-		}
+		StringBuilder sbuf = new StringBuilder();
+		this.buildPathString(sbuf);
+		return sbuf.toString();
 	}
 
 	@Override
@@ -200,10 +250,18 @@ public class LDPath {
 	 *            The buffer to append to. Not null.
 	 */
 	private void buildPathString(StringBuilder sbuf) {
-		if (!prefix.isRoot()) {
-			prefix.buildPathString(sbuf);
+		// TAGS: INEFFICIENT
+		if (isRoot()) {
 			sbuf.append(separator);
 		}
-		sbuf.append(segment);
+		else if (prefix.isRoot()) {
+			sbuf.append(separator);
+			sbuf.append(segment);
+		}
+		else {
+			prefix.buildPathString(sbuf);
+			sbuf.append(separator);
+			sbuf.append(segment);
+		}
 	}
 }
