@@ -6,7 +6,11 @@ package org.jehanson.livedata;
  */
 public interface LDListener {
 
-	public void parentChanged(LDElement element);
+	// Much as I would like to pass LDCursor, I can't w/o
+	// having each element know or calculate its own
+	// location in the tree
+
+	public void parentChanged(LDElement cursor);
 
 	public void valueChanged(LDElement element);
 

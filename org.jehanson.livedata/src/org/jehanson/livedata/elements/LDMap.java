@@ -365,7 +365,7 @@ public class LDMap extends LDElement implements LDContainer {
 
 	@Override
 	public void parentChanged(LDElement element) {
-		// NOP		
+		// NOP. it's from one of our children.		
 	}
 
 	@Override

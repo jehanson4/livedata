@@ -15,7 +15,7 @@ import java.util.List;
  * @author jehanson
  */
 public abstract class LDElement {
-	
+
 	// ===========================================
 	// Inner classes
 	// ===========================================
@@ -67,17 +67,17 @@ public abstract class LDElement {
 			public String getName() {
 				return "boolean";
 			}
-	
+
 			@Override
 			public char getSymbol() {
 				return 'b';
 			}
-	
+
 			@Override
 			public boolean isContainer() {
 				return false;
 			}
-	
+
 			@Override
 			public boolean isValue() {
 				return true;
@@ -88,17 +88,17 @@ public abstract class LDElement {
 			public String getName() {
 				return "double";
 			}
-	
+
 			@Override
 			public char getSymbol() {
 				return 'd';
 			}
-	
+
 			@Override
 			public boolean isContainer() {
 				return false;
 			}
-	
+
 			@Override
 			public boolean isValue() {
 				return true;
@@ -109,17 +109,17 @@ public abstract class LDElement {
 			public String getName() {
 				return "list";
 			}
-	
+
 			@Override
 			public char getSymbol() {
 				return 'L';
 			}
-	
+
 			@Override
 			public boolean isContainer() {
 				return true;
 			}
-	
+
 			@Override
 			public boolean isValue() {
 				return false;
@@ -130,17 +130,17 @@ public abstract class LDElement {
 			public String getName() {
 				return "long";
 			}
-	
+
 			@Override
 			public char getSymbol() {
 				return 'l';
 			}
-	
+
 			@Override
 			public boolean isContainer() {
 				return false;
 			}
-	
+
 			@Override
 			public boolean isValue() {
 				return true;
@@ -151,17 +151,17 @@ public abstract class LDElement {
 			public String getName() {
 				return "map";
 			}
-	
+
 			@Override
 			public char getSymbol() {
 				return 'M';
 			}
-	
+
 			@Override
 			public boolean isContainer() {
 				return true;
 			}
-	
+
 			@Override
 			public boolean isValue() {
 				return false;
@@ -172,17 +172,17 @@ public abstract class LDElement {
 			public String getName() {
 				return "reference";
 			}
-	
+
 			@Override
 			public char getSymbol() {
 				return 'r';
 			}
-	
+
 			@Override
 			public boolean isContainer() {
 				return false;
 			}
-	
+
 			@Override
 			public boolean isValue() {
 				return true;
@@ -193,17 +193,17 @@ public abstract class LDElement {
 			public String getName() {
 				return "string";
 			}
-	
+
 			@Override
 			public char getSymbol() {
 				return 's';
 			}
-	
+
 			@Override
 			public boolean isContainer() {
 				return false;
 			}
-	
+
 			@Override
 			public boolean isValue() {
 				return true;
@@ -214,23 +214,23 @@ public abstract class LDElement {
 			public String getName() {
 				return "void";
 			}
-	
+
 			@Override
 			public char getSymbol() {
 				return 'v';
 			}
-	
+
 			@Override
 			public boolean isContainer() {
 				return false;
 			}
-	
+
 			@Override
 			public boolean isValue() {
 				return false;
 			}
 		};
-	
+
 		/**
 		 * Returns a name for the item that's easier on the human eye than the
 		 * bare enum value. E.g., "list" or "int".
@@ -238,12 +238,12 @@ public abstract class LDElement {
 		 * @returns the name
 		 */
 		public abstract String getName();
-	
+
 		/**
 		 * Returns a 1-character abbreviation. @ the symbol
 		 */
 		public abstract char getSymbol();
-	
+
 		/**
 		 * Indicates whether this IType represents a container, as opposed to a
 		 * value or null.
@@ -251,7 +251,7 @@ public abstract class LDElement {
 		 * @return true if this IType represents a container, false if not.
 		 */
 		public abstract boolean isContainer();
-	
+
 		/**
 		 * Indicates whether this IType represents a value, as opposed to a
 		 * container or null.
@@ -282,50 +282,74 @@ public abstract class LDElement {
 	public abstract void print(PrintWriter writer, int level, boolean insertLineBreaks);
 
 	public abstract LDElement deepCopy();
-	
-	// This is problematic b/c it has to delete extant children in container types
+
+	// This is problematic b/c it has to delete extant children in container
+	// types
 	// public abstract void copyFrom(LDObject dobj) throws LDException;
-	
+
 	public LDContainer getParent() {
 		return parent;
 	}
 
+	/**
+	 * Sets this element's parent, fires change event, adds new parent (if not
+	 * null) as change listener.
+	 * 
+	 * @param parent new parent. Not null.
+	 * @throws IllegalStateException if elem's parent is already set.
+	 */
 	public void setParent(LDContainer parent) {
 		if (parent == null)
 			throw new IllegalArgumentException("parent cannot be null");
 		if (this.parent != null)
 			throw new IllegalStateException("Parent is already set");
 
+		// set & fire, then add listener
 		this.parent = parent;
-		if (this.parent != null)
-			addListener(this.parent);
 		fireParentChanged();
+
+		addListener(this.parent);
 	}
 
+	/**
+	 * Removes current parent (if not null) as change listener, sets parent to
+	 * null, fires change event.
+	 * 
+	 */
 	public void unsetParent() {
 		if (this.parent == null)
 			return;
 
+		// remove listener, then set & fire
 		if (this.parent != null)
 			removeListener(this.parent);
+
 		this.parent = null;
 		fireParentChanged();
 	}
-	
+
+	/**
+	 * Unset and set in a single operation.
+	 * 
+	 * @param parent new parent. Not null.
+	 */
 	public void replaceParent(LDContainer parent) {
 		if (parent == null)
 			throw new IllegalArgumentException("parent cannot be null");
 		if (this.parent == parent)
 			return;
-		
+
+		// remove, set & fire, add
 		if (this.parent != null)
 			removeListener(this.parent);
+
 		this.parent = parent;
+		fireParentChanged();
+
 		if (this.parent != null)
 			addListener(this.parent);
-		fireParentChanged();
 	}
-	
+
 	public void addListener(LDListener listener) {
 		if (listener == null)
 			throw new IllegalArgumentException("listener cannot be null");
@@ -333,13 +357,13 @@ public abstract class LDElement {
 			listeners = new ArrayList<LDListener>();
 		listeners.add(listener);
 	}
-	
+
 	public void removeListener(LDListener listener) {
 		if (listeners == null)
 			return;
 		listeners.remove(listener);
 	}
-	
+
 	@Override
 	public String toString() {
 		StringWriter w1 = new StringWriter();
@@ -380,19 +404,26 @@ public abstract class LDElement {
 		else if (betweenElements)
 			writer.print(" ");
 	}
-	
+
 	protected void fireParentChanged() {
 		if (listeners == null)
 			return;
-		for (LDListener listener : listeners) 
+		for (LDListener listener : listeners)
 			listener.parentChanged(this);
 	}
-	
+
 	protected void fireStructureChanged() {
 		if (listeners == null)
 			return;
-		for (LDListener listener : listeners) 
-			listener.structureChanged(this);	
+		for (LDListener listener : listeners)
+			listener.structureChanged(this);
+	}
+
+	protected void fireValueChanged() {
+		if (listeners == null)
+			return;
+		for (LDListener listener : listeners)
+			listener.valueChanged(this);
 	}
 	
 	protected List<LDListener> getListeners() {
@@ -401,21 +432,16 @@ public abstract class LDElement {
 		else
 			return this.listeners;
 	}
-	
+
 	protected void propagateStructureChange(LDElement element) {
 		if (parent != null)
 			parent.structureChanged(element);
 	}
-	
+
 	protected void propagateValueChange(LDElement element) {
 		if (parent != null)
 			parent.valueChanged(element);
 	}
+
 	
-	protected void fireValueChanged() {
-		if (listeners == null)
-			return;
-		for (LDListener listener : listeners) 
-			listener.valueChanged(this);
-	}
 }
